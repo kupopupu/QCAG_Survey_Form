@@ -39,7 +39,7 @@ function login(username, password) {
             username: username,
             ...user
         };
-        await loadData(); loadOutletList();.setItem('currentUser', JSON.stringify(currentUser));
+        document.addEventListener("DOMContentLoaded", async () => {   await loadData();   loadOutletList(); });.setItem('currentUser', JSON.stringify(currentUser));
         return true;
     }
     return false;
@@ -48,7 +48,7 @@ function login(username, password) {
 function logout() {
     if (confirm('🚪 Bạn có chắc chắn muốn đăng xuất?')) {
         currentUser = null;
-        await loadData(); loadOutletList();.removeItem('currentUser');
+        document.addEventListener("DOMContentLoaded", async () => {   await loadData();   loadOutletList(); });.removeItem('currentUser');
         document.getElementById('loginModal').style.display = 'flex';
         document.getElementById('mainHeader').style.display = 'none';
         document.getElementById('mainContent').style.display = 'none';
@@ -118,7 +118,7 @@ function initializeUI() {
 
 // Check for existing session
 function checkSession() {
-    const savedUser = await loadData(); loadOutletList();.getItem('currentUser');
+    const savedUser = document.addEventListener("DOMContentLoaded", async () => {   await loadData();   loadOutletList(); });.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
         initializeUI();
@@ -157,7 +157,7 @@ function loginAsUser(fullName, email, role) {
         position: role,
         permissions: permissions
     };
-    await loadData(); loadOutletList();.setItem('currentUser', JSON.stringify(currentUser));
+    document.addEventListener("DOMContentLoaded", async () => {   await loadData();   loadOutletList(); });.setItem('currentUser', JSON.stringify(currentUser));
     initializeUI();
 
     const roleDescription = role === 'SR/TBA' ? 'Bạn có thể xem, tạo yêu cầu và comment chỉnh sửa.' : 'Bạn có thể xem và comment chỉnh sửa (không thể tạo yêu cầu mới).';
@@ -230,7 +230,7 @@ document.getElementById('adminLoginForm').addEventListener('submit', function(e)
         // Cập nhật tên admin
         currentUser.name = adminName;
         currentUser.displayName = adminName;
-        await loadData(); loadOutletList();.setItem('currentUser', JSON.stringify(currentUser));
+        document.addEventListener("DOMContentLoaded", async () => {   await loadData();   loadOutletList(); });.setItem('currentUser', JSON.stringify(currentUser));
 
         initializeUI();
         alert(`✅ Đăng nhập Admin thành công!\n\nChào mừng ${adminName}! Bạn có toàn quyền quản lý hệ thống.`);
@@ -3310,4 +3310,5 @@ function notifyAdminEditedOrDeleted(id, action){
     // auto-remove after 12s
     setTimeout(()=> msg.remove(), 12000);
 }
+
 
