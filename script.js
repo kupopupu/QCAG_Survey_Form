@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Data storage
-let outlets = JSON.parse(localStorage.getItem('outlets')) || {};
+let outlets = {}; 
 let currentOutletCode = null;
 let currentRequestId = null;
 let currentUser = null;
@@ -39,7 +39,7 @@ function login(username, password) {
             username: username,
             ...user
         };
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        await loadData(); loadOutletList();.setItem('currentUser', JSON.stringify(currentUser));
         return true;
     }
     return false;
@@ -48,7 +48,7 @@ function login(username, password) {
 function logout() {
     if (confirm('🚪 Bạn có chắc chắn muốn đăng xuất?')) {
         currentUser = null;
-        localStorage.removeItem('currentUser');
+        await loadData(); loadOutletList();.removeItem('currentUser');
         document.getElementById('loginModal').style.display = 'flex';
         document.getElementById('mainHeader').style.display = 'none';
         document.getElementById('mainContent').style.display = 'none';
@@ -118,7 +118,7 @@ function initializeUI() {
 
 // Check for existing session
 function checkSession() {
-    const savedUser = localStorage.getItem('currentUser');
+    const savedUser = await loadData(); loadOutletList();.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
         initializeUI();
@@ -157,7 +157,7 @@ function loginAsUser(fullName, email, role) {
         position: role,
         permissions: permissions
     };
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    await loadData(); loadOutletList();.setItem('currentUser', JSON.stringify(currentUser));
     initializeUI();
 
     const roleDescription = role === 'SR/TBA' ? 'Bạn có thể xem, tạo yêu cầu và comment chỉnh sửa.' : 'Bạn có thể xem và comment chỉnh sửa (không thể tạo yêu cầu mới).';
@@ -230,7 +230,7 @@ document.getElementById('adminLoginForm').addEventListener('submit', function(e)
         // Cập nhật tên admin
         currentUser.name = adminName;
         currentUser.displayName = adminName;
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        await loadData(); loadOutletList();.setItem('currentUser', JSON.stringify(currentUser));
 
         initializeUI();
         alert(`✅ Đăng nhập Admin thành công!\n\nChào mừng ${adminName}! Bạn có toàn quyền quản lý hệ thống.`);
@@ -276,9 +276,30 @@ if (Object.keys(outlets).length === 0) {
     };
     saveData();
 }
-
-function saveData() {
-    localStorage.setItem('outlets', JSON.stringify(outlets));
+async function saveData() {
+    for (const [code, outlet] of Object.entries(outlets)) {
+        await supabase.from("outlets").upsert({
+            code: code,
+            name: outlet.name,
+            address: outlet.address,
+            area: outlet.area,
+            requests: outlet.requests || []
+        });
+    }
+}
+async function loadData() {
+    const { data, error } = await supabase.from("outlets").select("*");
+    if (!error) {
+        outlets = {};
+        data.forEach(row => {
+            outlets[row.code] = {
+                name: row.name,
+                address: row.address,
+                area: row.area,
+                requests: row.requests || []
+            };
+        });
+    }
 }
 
 let filteredOutlets = {};
@@ -3289,3 +3310,4 @@ function notifyAdminEditedOrDeleted(id, action){
     // auto-remove after 12s
     setTimeout(()=> msg.remove(), 12000);
 }
+
