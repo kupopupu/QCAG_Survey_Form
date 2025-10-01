@@ -1,153 +1,86 @@
 body {
     box-sizing: border-box;
 }
-
 .gradient-bg {
     background: linear-gradient(135deg, #fff5f0 0%, #ffe4d6 100%);
 }
-
 .card-shadow {
     box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
-
 .btn-hover:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 .slide-in {
     animation: slideIn 0.3s ease-out;
 }
-
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
 .fade-in {
     animation: fadeIn 0.5s ease-out;
 }
-
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-
 /* Modern scrollbar */
-
 .overflow-y-auto::-webkit-scrollbar {
     width: 8px;
 }
-
 .overflow-y-auto::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
 }
-
 .overflow-y-auto::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.3);
     border-radius: 4px;
 }
-
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.5);
 }
 
-
 /* Smooth transitions for layout changes */
-
-#outletDetailSection,
-#welcomeScreen {
+#outletDetailSection, #welcomeScreen {
     transition: all 0.3s ease-in-out;
 }
 
-
 /* Modal styling */
-
 #outletDetailModal .slide-in {
     animation: slideInModal 0.3s ease-out;
 }
 
 @keyframes slideInModal {
-    from {
-        opacity: 0;
-        transform: scale(0.9) translateY(-20px);
+    from { 
+        opacity: 0; 
+        transform: scale(0.9) translateY(-20px); 
     }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
+    to { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
     }
 }
-
 
 /* Orange theme colors */
-
-.bg-orange-dark {
-    background-color: #e55a2b;
-}
-
-.bg-orange-medium {
-    background-color: #ff6b35;
-}
-
-.bg-orange-light {
-    background-color: #ff8c42;
-}
-
-.bg-orange-lighter {
-    background-color: #ffad5a;
-}
-
-.text-white {
-    color: #ffffff;
-}
-
-.text-orange-light {
-    color: #fff5f0;
-}
-
-.text-orange-medium {
-    color: #ffe4d6;
-}
-
-.border-orange {
-    border-color: rgba(255, 255, 255, 0.2);
-}
-
-.border-orange-light {
-    border-color: rgba(255, 255, 255, 0.3);
-}
-
+.bg-orange-dark { background-color: #e55a2b; }
+.bg-orange-medium { background-color: #ff6b35; }
+.bg-orange-light { background-color: #ff8c42; }
+.bg-orange-lighter { background-color: #ffad5a; }
+.text-white { color: #ffffff; }
+.text-orange-light { color: #fff5f0; }
+.text-orange-medium { color: #ffe4d6; }
+.border-orange { border-color: rgba(255, 255, 255, 0.2); }
+.border-orange-light { border-color: rgba(255, 255, 255, 0.3); }
 
 /* Keep red for warnings */
-
-.bg-warning {
-    background-color: #dc3545;
-}
-
-.text-warning {
-    color: #dc3545;
-}
-
-.border-warning {
-    border-color: #dc3545;
-}
-
+.bg-warning { background-color: #dc3545; }
+.text-warning { color: #dc3545; }
+.border-warning { border-color: #dc3545; }
 
 /* Mobile Responsive Styles */
-
 @media (max-width: 768px) {
     /* Mobile table styling */
     .mobile-table {
@@ -218,18 +151,14 @@ body {
     }
 }
 
-
 /* Tablet adjustments */
-
 @media (min-width: 769px) and (max-width: 1024px) {
     .tablet-adjust {
         padding: 1rem;
     }
 }
 
-
 /* Desktop optimizations */
-
 @media (min-width: 1025px) {
     .desktop-optimize {
         max-width: 1200px;
@@ -237,13 +166,10 @@ body {
     }
 }
 
-
 /* Device detection classes */
-
 .is-mobile .desktop-only {
     display: none !important;
 }
-
 .is-desktop .mobile-only {
     display: none !important;
 }
