@@ -718,6 +718,17 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="script.js"></script>
+    <script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+  const supabaseUrl = "https://YOUR_PROJECT_ID.supabase.co";
+  const supabaseKey = "YOUR_ANON_KEY";
+
+  // Khai báo biến toàn cục để script.js dùng được
+  window.supabase = createClient(supabaseUrl, supabaseKey);
+</script>
+
 </body>
 
 </html>
+
