@@ -39,7 +39,8 @@ function login(username, password) {
             username: username,
             ...user
         };
-        document.addEventListener("DOMContentLoaded", async () => {   await loadData();   loadOutletList(); });.setItem('currentUser', JSON.stringify(currentUser));
+        // Lưu user vào localStorage (chỉ giữ thông tin đăng nhập)
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
         return true;
     }
     return false;
@@ -48,7 +49,7 @@ function login(username, password) {
 function logout() {
     if (confirm('🚪 Bạn có chắc chắn muốn đăng xuất?')) {
         currentUser = null;
-        document.addEventListener("DOMContentLoaded", async () => {   await loadData();   loadOutletList(); });.removeItem('currentUser');
+        localStorage.removeItem('currentUser'); // xoá session login
         document.getElementById('loginModal').style.display = 'flex';
         document.getElementById('mainHeader').style.display = 'none';
         document.getElementById('mainContent').style.display = 'none';
@@ -56,69 +57,8 @@ function logout() {
     }
 }
 
-function checkPermission(permission) {
-    return currentUser && currentUser.permissions.includes(permission);
-}
-
-function initializeUI() {
-    if (!currentUser) return;
-
-    // Show main interface
-    document.getElementById('loginModal').style.display = 'none';
-    document.getElementById('mainHeader').style.display = 'block';
-    document.getElementById('searchFilterHeader').style.display = 'block';
-    document.getElementById('mainContent').style.display = 'block';
-
-    // Update user info
-    const userInfo = document.getElementById('userInfo');
-    let roleColor, roleIcon, displayText;
-
-    if (currentUser.role === 'admin') {
-        roleColor = 'bg-red-600 text-white';
-        roleIcon = '🔧';
-        displayText = `${currentUser.name} (Admin)`;
-    } else if (currentUser.position === 'SR/TBA') {
-        roleColor = 'bg-blue-600 text-white';
-        roleIcon = '👤';
-        displayText = `${currentUser.name} (SR/TBA)`;
-    } else if (currentUser.position === 'SS') {
-        roleColor = 'bg-green-600 text-white';
-        roleIcon = '👥';
-        displayText = `${currentUser.name} (SS)`;
-    } else {
-        roleColor = 'bg-gray-600 text-white';
-        roleIcon = '●';
-        displayText = currentUser.name;
-    }
-
-    userInfo.innerHTML = `
-                <span class="${roleColor} px-2 py-1 rounded-full text-xs font-medium">
-                    ${roleIcon} ${displayText}
-                </span>
-            `;
-
-    // Update dashboard title
-    const dashboardTitle = document.getElementById('dashboardTitle');
-    dashboardTitle.textContent = currentUser.role === 'admin' ? 'Admin Dashboard' : 'User Dashboard';
-
-    // Show/hide create outlet button (only in main content area)
-    const createOutletBtnDesktop = document.getElementById('createOutletBtnDesktop');
-    const createOutletBtnMobile = document.getElementById('createOutletBtnMobile');
-    if (checkPermission('create') || checkPermission('manage')) {
-        if (createOutletBtnDesktop) createOutletBtnDesktop.style.display = 'block';
-        if (createOutletBtnMobile) createOutletBtnMobile.style.display = 'block';
-    } else {
-        if (createOutletBtnDesktop) createOutletBtnDesktop.style.display = 'none';
-        if (createOutletBtnMobile) createOutletBtnMobile.style.display = 'none';
-    }
-
-    // Load data
-    loadOutletList();
-}
-
-// Check for existing session
 function checkSession() {
-    const savedUser = document.addEventListener("DOMContentLoaded", async () => {   await loadData();   loadOutletList(); });.getItem('currentUser');
+    const savedUser = localStorage.getItem('currentUser'); // lấy user từ localStorage
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
         initializeUI();
@@ -127,28 +67,8 @@ function checkSession() {
     }
 }
 
-// User form functions
-function showUserForm() {
-    document.getElementById('userFormModal').style.display = 'flex';
-}
-
-function hideUserForm() {
-    document.getElementById('userFormModal').style.display = 'none';
-    document.getElementById('userLoginForm').reset();
-
-    // Reset role selection
-    document.querySelectorAll('.role-button').forEach(btn => {
-        btn.classList.remove('border-orange-500', 'bg-orange-100');
-        btn.classList.add('border-gray-300', 'bg-gray-50');
-    });
-
-    // Reset role description to default
-    document.getElementById('roleDescription').innerHTML = '<div class="text-gray-500 italic">Chọn chức vụ để xem mô tả...</div>';
-}
-
 function loginAsUser(fullName, email, role) {
-    const permissions = role === 'SR/TBA' ? ['view', 'create', 'edit'] : ['view', 'edit']; // SS không được tạo yêu cầu mới
-
+    const permissions = role === 'SR/TBA' ? ['view', 'create', 'edit'] : ['view', 'edit']; 
     currentUser = {
         username: email,
         role: role,
@@ -157,61 +77,15 @@ function loginAsUser(fullName, email, role) {
         position: role,
         permissions: permissions
     };
-    document.addEventListener("DOMContentLoaded", async () => {   await loadData();   loadOutletList(); });.setItem('currentUser', JSON.stringify(currentUser));
+    localStorage.setItem('currentUser', JSON.stringify(currentUser)); // lưu session
     initializeUI();
 
-    const roleDescription = role === 'SR/TBA' ? 'Bạn có thể xem, tạo yêu cầu và comment chỉnh sửa.' : 'Bạn có thể xem và comment chỉnh sửa (không thể tạo yêu cầu mới).';
+    const roleDescription = role === 'SR/TBA' 
+        ? 'Bạn có thể xem, tạo yêu cầu và comment chỉnh sửa.' 
+        : 'Bạn có thể xem và comment chỉnh sửa (không thể tạo yêu cầu mới).';
     alert(`✅ Chào mừng ${fullName}!\n\nChức vụ: ${role}\n${roleDescription}`);
 }
 
-// Role selection function
-function selectRole(role) {
-    // Reset all buttons
-    document.querySelectorAll('.role-button').forEach(btn => {
-        btn.classList.remove('border-orange-500', 'bg-orange-100');
-        btn.classList.add('border-gray-300', 'bg-gray-50');
-    });
-
-    // Activate selected button
-    const selectedBtn = role === 'SR/TBA' ? document.getElementById('roleBtn1') : document.getElementById('roleBtn2');
-    selectedBtn.classList.remove('border-gray-300', 'bg-gray-50');
-    selectedBtn.classList.add('border-orange-500', 'bg-orange-100');
-
-    // Set hidden input value
-    document.getElementById('userRole').value = role;
-
-    // Update role description in fixed space
-    const roleDescription = document.getElementById('roleDescription');
-
-    if (role === 'SR/TBA') {
-        roleDescription.innerHTML = `
-                    <div class="text-blue-600 font-semibold text-sm">👤 Sale Representative / Territory Business Advisor</div>
-                    <div class="text-gray-600 mt-2 text-xs leading-relaxed">Có thể xem outlet, tạo yêu cầu mới và gửi comment chỉnh sửa</div>
-                `;
-    } else if (role === 'SS') {
-        roleDescription.innerHTML = `
-                    <div class="text-green-600 font-semibold text-sm">👥 Sale Supervisor</div>
-                    <div class="text-gray-600 mt-2 text-xs leading-relaxed">Có thể xem outlet và gửi comment chỉnh sửa (không tạo yêu cầu mới)</div>
-                `;
-    }
-}
-
-// User login form handler
-document.getElementById('userLoginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const fullName = document.getElementById('userFullName').value.trim();
-    const email = document.getElementById('userEmail').value.trim();
-    const role = document.getElementById('userRole').value;
-
-    if (!fullName || !email || !role) {
-        alert('❌ Vui lòng điền đầy đủ thông tin!');
-        return;
-    }
-
-    hideUserForm();
-    loginAsUser(fullName, email, role);
-});
 
 // Admin login form handler
 document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
@@ -3318,6 +3192,7 @@ function notifyAdminEditedOrDeleted(id, action){
     console.log("✅ Kết nối Supabase ok, dữ liệu:", data);
   }
 })();
+
 
 
 
