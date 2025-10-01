@@ -1,0 +1,249 @@
+body {
+    box-sizing: border-box;
+}
+
+.gradient-bg {
+    background: linear-gradient(135deg, #fff5f0 0%, #ffe4d6 100%);
+}
+
+.card-shadow {
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* Modern scrollbar */
+
+.overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+
+/* Smooth transitions for layout changes */
+
+#outletDetailSection,
+#welcomeScreen {
+    transition: all 0.3s ease-in-out;
+}
+
+
+/* Modal styling */
+
+#outletDetailModal .slide-in {
+    animation: slideInModal 0.3s ease-out;
+}
+
+@keyframes slideInModal {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+/* Orange theme colors */
+
+.bg-orange-dark {
+    background-color: #e55a2b;
+}
+
+.bg-orange-medium {
+    background-color: #ff6b35;
+}
+
+.bg-orange-light {
+    background-color: #ff8c42;
+}
+
+.bg-orange-lighter {
+    background-color: #ffad5a;
+}
+
+.text-white {
+    color: #ffffff;
+}
+
+.text-orange-light {
+    color: #fff5f0;
+}
+
+.text-orange-medium {
+    color: #ffe4d6;
+}
+
+.border-orange {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.border-orange-light {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+
+/* Keep red for warnings */
+
+.bg-warning {
+    background-color: #dc3545;
+}
+
+.text-warning {
+    color: #dc3545;
+}
+
+.border-warning {
+    border-color: #dc3545;
+}
+
+
+/* Mobile Responsive Styles */
+
+@media (max-width: 768px) {
+    /* Mobile table styling */
+    .mobile-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .mobile-table table {
+        min-width: 800px;
+    }
+    /* Mobile modal adjustments */
+    .mobile-modal {
+        margin: 0.5rem;
+        max-height: calc(100vh - 1rem);
+    }
+    /* Mobile form adjustments */
+    .mobile-form {
+        padding: 1rem;
+    }
+    /* Mobile button adjustments */
+    .mobile-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+    /* Mobile text adjustments */
+    .mobile-text-sm {
+        font-size: 0.75rem;
+    }
+    /* Mobile grid adjustments */
+    .mobile-grid-1 {
+        grid-template-columns: 1fr;
+    }
+    /* Mobile spacing adjustments */
+    .mobile-px-2 {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    .mobile-py-2 {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    /* Mobile header adjustments */
+    .mobile-header {
+        padding: 0.75rem 1rem;
+    }
+    /* Mobile sidebar hide */
+    .mobile-hide-sidebar {
+        display: none;
+    }
+    /* Mobile full width */
+    .mobile-full-width {
+        width: 100%;
+    }
+    /* Touch-friendly buttons */
+    .touch-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    /* Mobile dropdown adjustments */
+    .mobile-dropdown {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90vw;
+        max-width: 300px;
+        z-index: 9999;
+    }
+}
+
+
+/* Tablet adjustments */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .tablet-adjust {
+        padding: 1rem;
+    }
+}
+
+
+/* Desktop optimizations */
+
+@media (min-width: 1025px) {
+    .desktop-optimize {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+
+
+/* Device detection classes */
+
+.is-mobile .desktop-only {
+    display: none !important;
+}
+
+.is-desktop .mobile-only {
+    display: none !important;
+}
