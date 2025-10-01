@@ -3310,5 +3310,14 @@ function notifyAdminEditedOrDeleted(id, action){
     // auto-remove after 12s
     setTimeout(()=> msg.remove(), 12000);
 }
+(async () => {
+  const { data, error } = await supabase.from("outlets").select("*");
+  if (error) {
+    console.error("❌ Supabase error:", error);
+  } else {
+    console.log("✅ Kết nối Supabase ok, dữ liệu:", data);
+  }
+})();
+
 
 
