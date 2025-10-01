@@ -5,39 +5,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Quản Lý Outlet - Sale Team</title>
-    <script src="https://cdn.tailwindcss.com"></script>
 
-    <div class="flex space-x-3 mt-6">
-        <button type="button" onclick="hideUserForm()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 px-4 rounded transition-colors duration-300">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="gradient-bg min-h-screen">
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg card-shadow p-8 w-full max-w-md slide-in">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-orange-medium rounded-lg mx-auto mb-4 flex items-center justify-center">
+                    <div class="w-8 h-8 bg-white rounded"></div>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Hệ Thống Quản Lý Outlet</h2>
+                <p class="text-gray-600">Chọn vai trò của bạn để tiếp tục</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- User Button -->
+                <button onclick="showUserForm()" class="w-full bg-orange-medium hover:bg-orange-dark text-white py-4 px-6 rounded btn-hover transition-all duration-300 font-semibold text-lg">
+                    <div class="flex items-center justify-center space-x-2">
+                        <span>Tôi là User</span>
+                    </div>
+                    <div class="text-sm font-normal mt-1 opacity-90">SR/TBA hoặc SS</div>
+                </button>
+
+                <!-- Admin Login Section -->
+                <div class="border-t border-gray-200 pt-4">
+                    <p class="text-center text-sm text-gray-600 mb-3">Dành cho quản trị viên:</p>
+                    <form id="adminLoginForm">
+                        <div class="space-y-3">
+                            <input type="text" id="adminName" required class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded text-gray-800 focus:border-orange-medium focus:outline-none transition-all duration-300" placeholder="Họ và tên Admin">
+                            <input type="text" id="adminUsername" required class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded text-gray-800 focus:border-orange-medium focus:outline-none transition-all duration-300" placeholder="Tên đăng nhập Admin">
+                            <input type="password" id="adminPassword" required class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded text-gray-800 focus:border-orange-medium focus:outline-none transition-all duration-300" placeholder="Mật khẩu Admin">
+                        </div>
+
+                        <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded btn-hover transition-all duration-300 mt-4 font-semibold">
+                            Đăng Nhập Admin
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Login Form Modal -->
+    <div id="userFormModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center" style="display: none;">
+        <div class="bg-white rounded-lg card-shadow p-8 w-full max-w-md slide-in">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-orange-medium rounded-lg mx-auto mb-4 flex items-center justify-center">
+                    <div class="w-8 h-8 bg-white rounded"></div>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Thông Tin User</h2>
+                <p class="text-gray-600">Vui lòng nhập thông tin của bạn</p>
+            </div>
+
+            <form id="userLoginForm">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Họ và Tên *</label>
+                        <input type="text" id="userFullName" required class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded text-gray-800 focus:border-orange-medium focus:outline-none transition-all duration-300" placeholder="Nhập họ và tên đầy đủ">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
+                        <input type="email" id="userEmail" required class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded text-gray-800 focus:border-orange-medium focus:outline-none transition-all duration-300" placeholder="example@company.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Chức Vụ *</label>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <button type="button" id="roleBtn1" onclick="selectRole('SR/TBA')" class="px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded text-gray-800 hover:border-orange-medium hover:bg-orange-50 transition-all duration-300 text-center role-button">
+                                <div class="font-semibold">SR/TBA</div>
+                            </button>
+
+                            <button type="button" id="roleBtn2" onclick="selectRole('SS')" class="px-4 py-3 bg-gray-50 border-2 border-gray-300 rounded text-gray-800 hover:border-orange-medium hover:bg-orange-50 transition-all duration-300 text-center role-button">
+                                <div class="font-semibold">SS</div>
+                            </button>
+                        </div>
+
+                        <!-- Hidden input for form validation -->
+                        <input type="hidden" id="userRole" required>
+
+                        <!-- Fixed space for role description -->
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 h-[100px] flex items-center justify-center">
+                            <div id="roleDescription" class="text-sm w-full text-center">
+                                <div class="text-gray-500 italic">Chọn chức vụ để xem mô tả...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex space-x-3 mt-6">
+                    <button type="button" onclick="hideUserForm()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 px-4 rounded transition-colors duration-300">
                         Hủy
                     </button>
-        <button type="submit" class="flex-1 bg-orange-medium hover:bg-orange-dark text-white py-3 px-4 rounded btn-hover transition-all duration-300 font-semibold">
+                    <button type="submit" class="flex-1 bg-orange-medium hover:bg-orange-dark text-white py-3 px-4 rounded btn-hover transition-all duration-300 font-semibold">
                         Đăng Nhập
                     </button>
-    </div>
-    </form>
-    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Header -->
     <div class="bg-white shadow-lg border-b border-gray-200" id="mainHeader" style="display: none;">
-        <div class="max-w-7xl mx-auto px-4 py-3">
+        <div class="max-w-7xl mx-auto mobile-px-2 mobile-header px-4 py-3">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 bg-orange-medium rounded"></div>
-                        <h1 class="text-lg font-bold text-gray-800">Quản Lý Outlet</h1>
+                <div class="flex items-center space-x-2 md:space-x-3">
+                    <div class="flex items-center space-x-1 md:space-x-2">
+                        <div class="w-5 h-5 md:w-6 md:h-6 bg-orange-medium rounded"></div>
+                        <h1 class="text-base md:text-lg font-bold text-gray-800">Quản Lý Outlet</h1>
                     </div>
                     <div id="userInfo" class="flex items-center">
                         <!-- User info will be populated here -->
                     </div>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <button id="createOutletBtn" onclick="showCreateOutlet()" class="bg-orange-medium hover:bg-orange-dark text-white px-3 py-2 rounded text-sm btn-hover transition-all duration-300">
-                        Tạo Mới
-                    </button>
-                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm btn-hover transition-all duration-300">
-                        Đăng Xuất
+                <div class="flex items-center space-x-1 md:space-x-3">
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1.5 md:px-3 md:py-2 rounded text-xs md:text-sm btn-hover transition-all duration-300 touch-btn">
+                        <span class="hidden sm:inline">Đăng Xuất</span>
+                        <span class="sm:hidden">⏻</span>
                     </button>
                 </div>
             </div>
@@ -46,14 +134,15 @@
 
     <!-- Fixed Header Section -->
     <div class="bg-orange-light shadow-sm border-b border-orange sticky top-0 z-40" id="searchFilterHeader" style="display: none;">
-        <div class="max-w-7xl mx-auto px-4 py-3">
+        <div class="max-w-7xl mx-auto mobile-px-2 px-4 mobile-py-2 py-3">
             <!-- Search Section -->
             <div class="mb-2">
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center space-x-1 md:space-x-2">
                     <div class="flex-1 relative">
-                        <input type="text" id="searchOutletCode" placeholder="Nhập Outlet Code hoặc Tên..." class="w-full pl-3 pr-16 py-2 bg-white border border-orange rounded text-gray-800 focus:border-orange-medium focus:outline-none transition-all duration-300 text-sm" onkeyup="searchOutlet(event)">
-                        <button onclick="searchOutlet()" class="absolute right-1 top-1 bottom-1 bg-orange-medium hover:bg-orange-dark text-white px-3 rounded text-xs btn-hover transition-all duration-300">
-                            Tìm
+                        <input type="text" id="searchOutletCode" placeholder="Nhập Code hoặc Tên..." class="w-full pl-3 pr-12 md:pr-16 py-2 bg-white border border-orange rounded text-gray-800 focus:border-orange-medium focus:outline-none transition-all duration-300 text-xs md:text-sm"
+                            onkeyup="searchOutlet(event)">
+                        <button onclick="searchOutlet()" class="absolute right-1 top-1 bottom-1 bg-orange-medium hover:bg-orange-dark text-white px-2 md:px-3 rounded text-xs btn-hover transition-all duration-300 touch-btn">
+                            🔍
                         </button>
                     </div>
                 </div>
@@ -68,9 +157,9 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2">
                     <div>
-                        <select id="filterArea" onchange="filterOutlets()" class="w-full px-2 py-1.5 bg-white border border-orange rounded text-gray-800 focus:border-orange-medium focus:outline-none text-xs">
+                        <select id="filterArea" onchange="filterOutlets()" class="w-full px-1 md:px-2 py-1.5 bg-white border border-orange rounded text-gray-800 focus:border-orange-medium focus:outline-none text-xs touch-btn">
                             <option value="">Khu vực</option>
                             <option value="S4">S4</option>
                             <option value="S5">S5</option>
@@ -82,7 +171,7 @@
                     </div>
 
                     <div>
-                        <select id="filterStatus" onchange="filterOutlets()" class="w-full px-2 py-1.5 bg-white border border-orange rounded text-gray-800 focus:border-orange-medium focus:outline-none text-xs">
+                        <select id="filterStatus" onchange="filterOutlets()" class="w-full px-1 md:px-2 py-1.5 bg-white border border-orange rounded text-gray-800 focus:border-orange-medium focus:outline-none text-xs touch-btn">
                             <option value="">Trạng thái</option>
                             <option value="completed">Hoàn thành</option>
                             <option value="pending">Chưa xong</option>
@@ -91,7 +180,7 @@
                     </div>
 
                     <div>
-                        <select id="sortBy" onchange="filterOutlets()" class="w-full px-2 py-1.5 bg-white border border-orange rounded text-gray-800 focus:border-orange-medium focus:outline-none text-xs">
+                        <select id="sortBy" onchange="filterOutlets()" class="w-full px-1 md:px-2 py-1.5 bg-white border border-orange rounded text-gray-800 focus:border-orange-medium focus:outline-none text-xs touch-btn">
                             <option value="code-asc">Code A-Z</option>
                             <option value="code-desc">Code Z-A</option>
                             <option value="name-asc">Tên A-Z</option>
@@ -102,7 +191,7 @@
                     </div>
 
                     <div>
-                        <button onclick="clearFilters()" class="w-full bg-white hover:bg-gray-100 text-gray-800 px-2 py-1.5 rounded text-xs btn-hover transition-all duration-300">
+                        <button onclick="clearFilters()" class="w-full bg-white hover:bg-gray-100 text-gray-800 px-1 md:px-2 py-1.5 rounded text-xs btn-hover transition-all duration-300 touch-btn">
                             Xóa Lọc
                         </button>
                     </div>
@@ -111,44 +200,134 @@
         </div>
     </div>
 
-    <!-- Main Content - Outlet List with Sidebar -->
-    <div class="max-w-7xl mx-auto px-4 py-6" id="mainContent" style="display: none;">
-        <div class="flex space-x-6">
-            <!-- Main Table -->
+    <!-- Main Content - 2 Column Layout -->
+    <div class="max-w-7xl mx-auto mobile-px-2 px-4 mobile-py-2 py-6" id="mainContent" style="display: none;">
+        <!-- Mobile: Single column with hamburger menu -->
+        <div class="block md:hidden">
+            <!-- Mobile Header with Hamburger Menu -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center space-x-2">
+                    <span>🏪</span>
+                    <span>Danh Sách Outlet</span>
+                    <span id="outletCount" class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-sm">0</span>
+                </h3>
+
+                <!-- Hamburger Menu Button -->
+                <button id="mobileMenuToggle" onclick="toggleMobileMenu()" class="bg-orange-medium hover:bg-orange-dark text-white p-2 rounded-lg transition-all duration-300 touch-btn flex flex-col items-center justify-center space-y-1" title="Xem outlet chưa hoàn thành">
+                    <div class="w-5 h-0.5 bg-white transition-all duration-300" id="hamburger-line-1"></div>
+                    <div class="w-5 h-0.5 bg-white transition-all duration-300" id="hamburger-line-2"></div>
+                    <div class="w-5 h-0.5 bg-white transition-all duration-300" id="hamburger-line-3"></div>
+                </button>
+            </div>
+
+            <!-- Mobile Create Outlet Button -->
+            <div class="mb-3">
+                <button id="createOutletBtnMobile" onclick="showCreateOutlet()" class="w-full bg-orange-medium hover:bg-orange-dark text-white px-3 py-2 rounded text-xs btn-hover transition-all duration-300 touch-btn font-medium">
+                    + Tạo Outlet Mới
+                </button>
+            </div>
+
+            <!-- Mobile: Danh sách Outlet (Always visible) -->
+            <div class="bg-white rounded-lg card-shadow p-4 mb-4">
+                <div id="outletGridContainer" class="grid grid-cols-1 gap-4 max-h-96 overflow-y-auto">
+                    <!-- Outlet cards will be populated here -->
+                </div>
+            </div>
+
+            <!-- Mobile: Pending Outlets Overlay Tab -->
+            <div id="mobilePendingOverlay" class="fixed inset-4 bg-white z-40 transform translate-x-full transition-transform duration-300 ease-in-out rounded-lg shadow-2xl" style="display: none;">
+                <!-- Overlay Header -->
+                <div class="bg-red-500 px-4 py-3 shadow-lg rounded-t-lg">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <h3 class="text-base font-bold text-white">Outlet Chưa Hoàn Thành</h3>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span id="pendingOutletCountOverlay" class="bg-white text-red-500 px-2 py-1 rounded-full text-xs font-bold">0</span>
+                            <button onclick="closeMobilePendingOverlay()" class="text-white hover:bg-red-600 p-2 rounded-lg transition-colors touch-btn">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overlay Content -->
+                <div class="flex-1 overflow-y-auto p-3 bg-gray-50">
+                    <div id="pendingOutletsListOverlay" class="space-y-2">
+                        <!-- Pending outlets will be populated here -->
+                    </div>
+                    <div id="noPendingOutletsOverlay" class="text-center py-8 text-gray-600" style="display: none;">
+                        <div class="w-12 h-12 bg-green-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <div class="w-6 h-6 bg-green-500 rounded-full"></div>
+                        </div>
+                        <h4 class="text-base font-semibold text-gray-800 mb-1">Tuyệt vời! 🎉</h4>
+                        <p class="text-xs">Tất cả outlet đã hoàn thành!</p>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Footer -->
+                <div class="bg-white border-t border-gray-200 px-3 py-2 rounded-b-lg">
+                    <div class="flex items-center justify-between text-xs text-gray-600">
+                        <span>📊 Thống kê</span>
+                        <span id="pendingStatsOverlay">0 outlet cần xử lý</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop: 2 Column Layout -->
+        <div class="hidden md:flex md:space-x-6">
+            <!-- Cột 1: Danh Sách Outlet (Lớn hơn) -->
             <div class="flex-1">
-                <div class="bg-white rounded-lg card-shadow overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-orange-medium">
+                <div class="bg-white rounded-lg card-shadow p-6">
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-gray-800 flex items-center space-x-3">
+                                <span>🏪</span>
+                                <span>Danh Sách Outlet</span>
+                                <span id="outletCountDesktop" class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold">0</span>
+                            </h3>
+                            <button id="createOutletBtnDesktop" onclick="showCreateOutlet()" class="bg-orange-medium hover:bg-orange-dark text-white px-4 py-2 rounded text-sm btn-hover transition-all duration-300 font-semibold">
+                                + Tạo Outlet Mới
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Table View -->
+                    <div class="overflow-x-auto max-h-[600px]">
+                        <table class="w-full text-sm">
+                            <thead class="bg-orange-50 sticky top-0">
                                 <tr>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold text-white">Outlet Code</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold text-white">Tên Outlet</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold text-white">Khu Vực</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold text-white">Tổng YC</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold text-white">Chưa Xong</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold text-white">Quản Lý</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Code</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Tên Outlet</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Khu Vực</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Yêu Cầu</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Chưa Xong</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Thao Tác</th>
                                 </tr>
                             </thead>
-                            <tbody id="outletTableBody">
-                                <!-- Data will be populated here -->
+                            <tbody id="outletTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Outlet rows will be populated here -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Sidebar - Outlets with Pending Requests -->
-            <div class="w-80 space-y-4">
+            <!-- Cột 2: Outlet Chưa Hoàn Thành (Nhỏ hơn) -->
+            <div class="w-80">
                 <div class="bg-white rounded-lg card-shadow p-6 sticky top-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">Outlet Chưa Hoàn Thành</h3>
-                        <span id="pendingOutletCount" class="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">0</span>
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Outlet Chưa Hoàn Thành</h3>
+                        <span id="pendingOutletCountDesktop" class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">0</span>
                     </div>
-                    <div id="pendingOutletsList" class="space-y-3 max-h-96 overflow-y-auto">
+                    <div id="pendingOutletsListDesktop" class="space-y-4 max-h-[500px] overflow-y-auto">
                         <!-- Pending outlets will be populated here -->
                     </div>
-                    <div id="noPendingOutlets" class="text-center py-8 text-gray-600" style="display: none;">
-                        <div class="w-12 h-12 bg-green-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <div id="noPendingOutletsDesktop" class="text-center py-8 text-gray-600" style="display: none;">
+                        <div class="w-12 h-12 bg-green-100 rounded-full mx-auto mb-3 flex items-center justify-center">
                             <div class="w-6 h-6 bg-green-500 rounded-full"></div>
                         </div>
                         <p class="text-sm">Tất cả outlet đã hoàn thành!</p>
@@ -164,53 +343,64 @@
             <!-- Modal Header -->
             <div class="bg-orange-medium px-6 py-4 border-b border-orange">
                 <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-xl font-bold text-white" id="outletDetailTitle">Chi Tiết Outlet</h2>
-                        <p class="text-orange-light" id="outletDetailInfo"></p>
+                    <div class="flex-1">
+                        <h2 class="text-lg md:text-xl font-bold text-white" id="outletDetailTitle">Chi Tiết Outlet</h2>
+                        <p class="text-orange-light text-sm" id="outletDetailInfo"></p>
                     </div>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="showNewRequestForm()" class="bg-white hover:bg-orange-50 text-orange-600 border-2 border-orange-500 px-4 py-2 rounded btn-hover transition-all duration-300 font-semibold shadow-lg">
-                                Thêm Yêu Cầu Mới
+                    <div class="flex items-center space-x-2 md:space-x-3">
+                        <button onclick="showNewRequestForm()" class="bg-white hover:bg-orange-50 text-orange-600 border-2 border-orange-500 px-2 py-1.5 md:px-4 md:py-2 rounded btn-hover transition-all duration-300 font-semibold shadow-lg text-xs md:text-sm">
+                                <span class="hidden sm:inline">Thêm Yêu Cầu Mới</span>
+                                <span class="sm:hidden">+ YC</span>
                             </button>
-                        <button onclick="closeOutletDetail()" class="bg-orange-dark hover:bg-red-600 text-white px-3 py-2 rounded btn-hover transition-all duration-300">
-                                Đóng
+                        <button onclick="closeOutletDetail()" class="bg-orange-dark hover:bg-red-600 text-white px-2 py-1.5 md:px-3 md:py-2 rounded btn-hover transition-all duration-300 text-xs md:text-sm">
+                                <span class="hidden sm:inline">Đóng</span>
+                                <span class="sm:hidden">✕</span>
                             </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal Content - Scrollable Request List -->
+            <!-- Modal Content - Scrollable Request Table/Grid -->
             <div class="overflow-y-auto" style="max-height: calc(100vh - 200px);">
                 <div class="p-6">
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-orange-light sticky top-0">
+                    <div class="mb-4 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="bg-white border-orange">
+                            <label for="selectAll" class="text-sm text-gray-700">Chọn tất cả</label>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <span id="requestCount">0</span> yêu cầu
+                        </div>
+                    </div>
+
+                    <!-- Desktop Table View -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-orange-50">
                                 <tr>
-                                    <th class="px-4 py-3 text-center">
-                                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="bg-white border-orange">
-                                    </th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white">STT</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white">Tên Người YC</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white">Loại</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white">Brand</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white">Ngày Gửi</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white">Trạng Thái</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white">Chỉnh Sửa</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white">Quản Lý</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">STT</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Người YC</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Hạng Mục</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Ngày Tạo</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Trạng Thái</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Thao Tác</th>
                                 </tr>
                             </thead>
-                            <tbody id="requestTableBody">
-                                <!-- Request data will be populated here -->
+                            <tbody id="requestTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Request rows will be populated here -->
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Mobile Grid View -->
+                    <div id="requestGridContainer" class="md:hidden grid grid-cols-1 gap-4">
+                        <!-- Request cards will be populated here -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
     </div>
-
-
 
     <!-- Edit Outlet Form -->
     <div id="editOutletModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4" style="display: none;">
@@ -226,6 +416,10 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Tên Outlet *</label>
                         <input type="text" id="editOutletName" required class="w-full px-3 py-2 bg-white border border-gray-300 rounded text-gray-800 focus:border-orange-medium focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Địa Chỉ *</label>
+                        <textarea id="editOutletAddress" required rows="2" class="w-full px-3 py-2 bg-white border border-gray-300 rounded text-gray-800 focus:border-orange-medium focus:outline-none resize-none"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Khu Vực *</label>
@@ -269,6 +463,10 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Tên Outlet *</label>
                         <input type="text" id="newOutletName" required class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Địa Chỉ *</label>
+                        <textarea id="newOutletAddress" required rows="2" class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none resize-none" placeholder="Nhập địa chỉ chi tiết của outlet"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Khu Vực *</label>
@@ -517,2621 +715,9 @@
     </div>
     </div>
 
-    <script>
-        // Data storage
-        let outlets = JSON.parse(localStorage.getItem('outlets')) || {};
-        let currentOutletCode = null;
-        let currentRequestId = null;
-        let currentUser = null;
 
-        // User accounts
-        const users = {
-            'admin': {
-                password: 'admin123',
-                role: 'admin',
-                name: 'Quản Trị Viên',
-                permissions: ['view', 'create', 'edit', 'delete', 'upload', 'manage']
-            }
-        };
-
-
-        // Authentication functions
-        function login(username, password) {
-            const user = users[username];
-            if (user && user.password === password) {
-                currentUser = {
-                    username: username,
-                    ...user
-                };
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                return true;
-            }
-            return false;
-        }
-
-        function logout() {
-            if (confirm('🚪 Bạn có chắc chắn muốn đăng xuất?')) {
-                currentUser = null;
-                localStorage.removeItem('currentUser');
-                document.getElementById('loginModal').style.display = 'flex';
-                document.getElementById('mainHeader').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'none';
-                document.getElementById('loginForm').reset();
-            }
-        }
-
-        function checkPermission(permission) {
-            return currentUser && currentUser.permissions.includes(permission);
-        }
-
-        function initializeUI() {
-            if (!currentUser) return;
-
-            // Show main interface
-            document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('mainHeader').style.display = 'block';
-            document.getElementById('searchFilterHeader').style.display = 'block';
-            document.getElementById('mainContent').style.display = 'block';
-
-            // Update user info
-            const userInfo = document.getElementById('userInfo');
-            let roleColor, roleIcon, displayText;
-
-            if (currentUser.role === 'admin') {
-                roleColor = 'bg-red-600 text-white';
-                roleIcon = '🔧';
-                displayText = `${currentUser.name} (Admin)`;
-            } else if (currentUser.position === 'SR/TBA') {
-                roleColor = 'bg-blue-600 text-white';
-                roleIcon = '👤';
-                displayText = `${currentUser.name} (SR/TBA)`;
-            } else if (currentUser.position === 'SS') {
-                roleColor = 'bg-green-600 text-white';
-                roleIcon = '👥';
-                displayText = `${currentUser.name} (SS)`;
-            } else {
-                roleColor = 'bg-gray-600 text-white';
-                roleIcon = '●';
-                displayText = currentUser.name;
-            }
-
-            userInfo.innerHTML = `
-                <span class="${roleColor} px-2 py-1 rounded-full text-xs font-medium">
-                    ${roleIcon} ${displayText}
-                </span>
-            `;
-
-            // Update dashboard title
-            const dashboardTitle = document.getElementById('dashboardTitle');
-            dashboardTitle.textContent = currentUser.role === 'admin' ? 'Admin Dashboard' : 'User Dashboard';
-
-            // Show/hide create outlet button (both admin and user can create)
-            const createOutletBtn = document.getElementById('createOutletBtn');
-            if (checkPermission('create') || checkPermission('manage')) {
-                createOutletBtn.style.display = 'block';
-            } else {
-                createOutletBtn.style.display = 'none';
-            }
-
-            // Load data
-            loadOutletList();
-        }
-
-        // Check for existing session
-        function checkSession() {
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                initializeUI();
-            } else {
-                document.getElementById('loginModal').style.display = 'flex';
-            }
-        }
-
-        // User form functions
-        function showUserForm() {
-            document.getElementById('userFormModal').style.display = 'flex';
-        }
-
-        function hideUserForm() {
-            document.getElementById('userFormModal').style.display = 'none';
-            document.getElementById('userLoginForm').reset();
-
-            // Reset role selection
-            document.querySelectorAll('.role-button').forEach(btn => {
-                btn.classList.remove('border-orange-500', 'bg-orange-100');
-                btn.classList.add('border-gray-300', 'bg-gray-50');
-            });
-
-            // Reset role description to default
-            document.getElementById('roleDescription').innerHTML = '<div class="text-gray-500 italic">Chọn chức vụ để xem mô tả...</div>';
-        }
-
-        function loginAsUser(fullName, email, role) {
-            const permissions = role === 'SR/TBA' ? ['view', 'create', 'edit'] : ['view', 'edit']; // SS không được tạo yêu cầu mới
-
-            currentUser = {
-                username: email,
-                role: role,
-                name: fullName,
-                email: email,
-                position: role,
-                permissions: permissions
-            };
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            initializeUI();
-
-            const roleDescription = role === 'SR/TBA' ? 'Bạn có thể xem, tạo yêu cầu và comment chỉnh sửa.' : 'Bạn có thể xem và comment chỉnh sửa (không thể tạo yêu cầu mới).';
-            alert(`✅ Chào mừng ${fullName}!\n\nChức vụ: ${role}\n${roleDescription}`);
-        }
-
-        // Role selection function
-        function selectRole(role) {
-            // Reset all buttons
-            document.querySelectorAll('.role-button').forEach(btn => {
-                btn.classList.remove('border-orange-500', 'bg-orange-100');
-                btn.classList.add('border-gray-300', 'bg-gray-50');
-            });
-
-            // Activate selected button
-            const selectedBtn = role === 'SR/TBA' ? document.getElementById('roleBtn1') : document.getElementById('roleBtn2');
-            selectedBtn.classList.remove('border-gray-300', 'bg-gray-50');
-            selectedBtn.classList.add('border-orange-500', 'bg-orange-100');
-
-            // Set hidden input value
-            document.getElementById('userRole').value = role;
-
-            // Update role description in fixed space
-            const roleDescription = document.getElementById('roleDescription');
-
-            if (role === 'SR/TBA') {
-                roleDescription.innerHTML = `
-                    <div class="text-blue-600 font-semibold text-sm">👤 Sale Representative / Territory Business Advisor</div>
-                    <div class="text-gray-600 mt-2 text-xs leading-relaxed">Có thể xem outlet, tạo yêu cầu mới và gửi comment chỉnh sửa</div>
-                `;
-            } else if (role === 'SS') {
-                roleDescription.innerHTML = `
-                    <div class="text-green-600 font-semibold text-sm">👥 Sale Supervisor</div>
-                    <div class="text-gray-600 mt-2 text-xs leading-relaxed">Có thể xem outlet và gửi comment chỉnh sửa (không tạo yêu cầu mới)</div>
-                `;
-            }
-        }
-
-        // User login form handler
-        document.getElementById('userLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const fullName = document.getElementById('userFullName').value.trim();
-            const email = document.getElementById('userEmail').value.trim();
-            const role = document.getElementById('userRole').value;
-
-            if (!fullName || !email || !role) {
-                alert('❌ Vui lòng điền đầy đủ thông tin!');
-                return;
-            }
-
-            hideUserForm();
-            loginAsUser(fullName, email, role);
-        });
-
-        // Admin login form handler
-        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const adminName = document.getElementById('adminName').value.trim();
-            const username = document.getElementById('adminUsername').value.trim();
-            const password = document.getElementById('adminPassword').value.trim();
-
-            if (!adminName) {
-                alert('❌ Vui lòng nhập họ và tên Admin!');
-                return;
-            }
-
-            if (login(username, password)) {
-                // Cập nhật tên admin
-                currentUser.name = adminName;
-                currentUser.displayName = adminName;
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-                initializeUI();
-                alert(`✅ Đăng nhập Admin thành công!\n\nChào mừng ${adminName}! Bạn có toàn quyền quản lý hệ thống.`);
-            } else {
-                alert('❌ Sai tên đăng nhập hoặc mật khẩu Admin!\n\nVui lòng kiểm tra lại thông tin.');
-                document.getElementById('adminPassword').value = '';
-            }
-        });
-
-        // Initialize with sample data
-        if (Object.keys(outlets).length === 0) {
-            outlets = {
-                '12345678': {
-                    name: 'Quán Bia ABC',
-                    area: 'S4',
-                    requests: [{
-                        id: 1,
-                        requesterName: 'Nguyễn Văn A',
-                        area: 'S4',
-                        brand: 'Tiger',
-                        address: '123 Phố Huế, Hai Bà Trưng, Hà Nội',
-                        type: 'Bảng Hiệu',
-                        width: 200,
-                        height: 80,
-                        content: 'QUÁN BIA ABC - TIGER BEER',
-                        createdAt: '2024-01-15 14:30:00'
-                    }, {
-                        id: 2,
-                        requesterName: 'Trần Thị B',
-                        area: 'S5',
-                        brand: 'Heineken',
-                        address: '456 Nguyễn Trãi, Thanh Xuân, Hà Nội',
-                        type: 'Hộp Đèn',
-                        width: 150,
-                        height: 60,
-                        content: 'HEINEKEN - FRESH BEER',
-                        createdAt: '2024-01-20 09:15:00'
-                    }]
-                }
-            };
-            saveData();
-        }
-
-        function saveData() {
-            localStorage.setItem('outlets', JSON.stringify(outlets));
-        }
-
-        let filteredOutlets = {};
-
-        function filterOutlets() {
-            const searchValue = document.getElementById('searchOutletCode').value.trim().toLowerCase();
-            const filterArea = document.getElementById('filterArea').value;
-            const filterStatus = document.getElementById('filterStatus').value;
-            const sortBy = document.getElementById('sortBy').value;
-
-            // Start with all outlets
-            let filtered = Object.entries(outlets);
-
-            // Apply search filter
-            if (searchValue) {
-                filtered = filtered.filter(([code, outlet]) => {
-                    return code.toLowerCase().includes(searchValue) ||
-                        outlet.name.toLowerCase().includes(searchValue);
-                });
-            }
-
-            // Apply area filter
-            if (filterArea) {
-                filtered = filtered.filter(([code, outlet]) => outlet.area === filterArea);
-            }
-
-            // Apply status filter
-            if (filterStatus) {
-                filtered = filtered.filter(([code, outlet]) => {
-                    const requests = outlet.requests || [];
-                    const pendingCount = requests.filter(r => !r.completed).length;
-
-                    switch (filterStatus) {
-                        case 'completed':
-                            return requests.length > 0 && pendingCount === 0;
-                        case 'pending':
-                            return pendingCount > 0;
-                        case 'no-requests':
-                            return requests.length === 0;
-                        default:
-                            return true;
-                    }
-                });
-            }
-
-            // Apply sorting
-            filtered.sort(([codeA, outletA], [codeB, outletB]) => {
-                switch (sortBy) {
-                    case 'code-desc':
-                        return codeB.localeCompare(codeA);
-                    case 'name-asc':
-                        return outletA.name.localeCompare(outletB.name);
-                    case 'name-desc':
-                        return outletB.name.localeCompare(outletA.name);
-                    case 'area-asc':
-                        return outletA.area.localeCompare(outletB.area);
-                    case 'pending-desc':
-                        const pendingA = (outletA.requests || []).filter(r => !r.completed).length;
-                        const pendingB = (outletB.requests || []).filter(r => !r.completed).length;
-                        return pendingB - pendingA;
-                    case 'code-asc':
-                    default:
-                        return codeA.localeCompare(codeB);
-                }
-            });
-
-            // Convert back to object for display
-            filteredOutlets = Object.fromEntries(filtered);
-
-            // Update display
-            displayFilteredOutlets();
-            updateFilterInfo(filtered.length, Object.keys(outlets).length);
-        }
-
-        function displayFilteredOutlets() {
-            const tbody = document.getElementById('outletTableBody');
-            tbody.innerHTML = '';
-
-            for (const [code, outlet] of Object.entries(filteredOutlets)) {
-                const row = document.createElement('tr');
-                row.className = 'border-b border-adobe hover:bg-adobe-light cursor-pointer transition-colors duration-200';
-                row.onclick = () => viewOutletDetail(code);
-                row.innerHTML = `
-                    <td class="px-6 py-4 font-mono text-gray-400">${code}</td>
-                    <td class="px-6 py-4 font-semibold text-adobe-light">${outlet.name}</td>
-                    <td class="px-6 py-4 text-adobe-light">${outlet.area}</td>
-                    <td class="px-6 py-4">
-                        <span class="bg-gray-600 text-white px-2 py-1 rounded-full text-sm">
-                            ${outlet.requests ? outlet.requests.length : 0}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4">
-                        ${(() => {
-                            const allRequests = outlet.requests || [];
-                            const pendingCount = allRequests.filter(r => !r.completed).length;
-                            const needsEditCount = allRequests.filter(r => {
-                                return r.editHistory && r.editHistory.length > 0 && 
-                                       r.editHistory.some(edit => !edit.isFixed);
-                            }).length;
-                            const totalIssues = pendingCount + needsEditCount;
-                            
-                            if (totalIssues === 0) {
-                                return '<span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">0</span>';
-                            } else if (pendingCount > 0 && needsEditCount > 0) {
-                                return ` < div class = "space-y-1" >
-                    <
-                    span class = "bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs block" > $ {
-                        pendingCount
-                    }
-                chưa xong < /span> <
-                span class = "bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs block" > $ {
-                    needsEditCount
-                }
-                cần sửa < /span> < /
-                div > `;
-            } else if (needsEditCount > 0) {
-                return ` < span class = "bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-sm" > $ {
-                    needsEditCount
-                }
-                cần sửa < /span>`;
-            } else {
-                return `<span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm">${pendingCount}</span>`;
-            }
-        })()
-        } <
-        /td> <
-        td class = "px-6 py-4"
-        onclick = "event.stopPropagation()" >
-            <
-            div class = "flex items-center space-x-2" >
-            <
-            button onclick = "viewOutletDetail('${code}')"
-        class = "bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm btn-hover transition-all duration-300" >
-            Xem <
-            /button>
-        $ {
-            checkPermission('manage') ? `
-                                <div class="relative inline-block text-left">
-                                    <button onclick="toggleDropdown('${code}')" class="bg-adobe-lighter hover:bg-gray-600 text-white px-3 py-2 rounded text-sm btn-hover transition-all duration-300 flex items-center space-x-1">
-                                        <span>⚙</span>
-                                        <svg class="w-4 h-4 transform transition-transform dropdown-arrow-${code}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </button>
-                                    
-                                    <div id="dropdown-${code}" class="hidden absolute right-0 mt-2 w-48 bg-adobe-medium rounded-lg shadow-lg border border-adobe z-30">
-                                        <div class="py-1">
-                                            <button onclick="editOutlet('${code}'); hideDropdown('${code}')" class="w-full text-left px-4 py-2 text-sm text-adobe-light hover:bg-adobe-light hover:text-white flex items-center space-x-2">
-                                                <span>✎</span>
-                                                <span>Chỉnh Sửa Outlet</span>
-                                            </button>
-                                            <button onclick="deleteOutlet('${code}'); hideDropdown('${code}')" class="w-full text-left px-4 py-2 text-sm text-adobe-light hover:bg-warning hover:text-white flex items-center space-x-2">
-                                                <span>×</span>
-                                                <span>Xóa Outlet</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ` : ''
-        } <
-        /div> < /
-        td >
-            `;
-                tbody.appendChild(row);
-            }
-        }
-
-        function updateFilterInfo(filteredCount, totalCount) {
-            const filterInfo = document.getElementById('filterInfo');
-            
-            if (filteredCount === totalCount) {
-                filterInfo.style.display = 'none';
-            } else {
-                filterInfo.style.display = 'block';
-                filterInfo.innerHTML = ` <
-            div class = "flex items-center space-x-2" >
-            <
-            span class = "bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold" > 📊Hiển thị $ {
-                filteredCount
-            }
-        /${totalCount} outlet < /
-        span >
-            $ {
-                filteredCount === 0 ? '<span class="text-orange-600">⚠️ Không tìm thấy outlet nào phù hợp với bộ lọc</span>' : ''
-            } <
-            /div>
-        `;
-            }
-        }
-
-        function clearFilters() {
-            document.getElementById('searchOutletCode').value = '';
-            document.getElementById('filterArea').value = '';
-            document.getElementById('filterStatus').value = '';
-            document.getElementById('sortBy').value = 'code-asc';
-            
-            // Reset to show all outlets
-            filteredOutlets = outlets;
-            loadOutletList();
-        }
-
-        function loadOutletList() {
-            // Initialize filtered outlets with all outlets
-            filteredOutlets = outlets;
-            
-            const tbody = document.getElementById('outletTableBody');
-            tbody.innerHTML = '';
-            
-            for (const [code, outlet] of Object.entries(outlets)) {
-                const row = document.createElement('tr');
-                row.className = 'border-b hover:bg-blue-50 cursor-pointer transition-colors duration-200';
-                row.onclick = () => viewOutletDetail(code);
-                row.innerHTML = ` <
-        td class = "px-6 py-4 font-mono text-blue-600" > $ {
-            code
-        } < /td> <
-        td class = "px-6 py-4 font-semibold" > $ {
-            outlet.name
-        } < /td> <
-        td class = "px-6 py-4" > $ {
-            outlet.area
-        } < /td> <
-        td class = "px-6 py-4" >
-            <
-            span class = "bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm" >
-            $ {
-                outlet.requests ? outlet.requests.length : 0
-            } <
-            /span> < /
-        td > <
-            td class = "px-6 py-4" >
-            <
-            span class = "bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm" >
-            $ {
-                outlet.requests ? outlet.requests.filter(r => !r.completed).length : 0
-            } <
-            /span> < /
-        td > <
-            td class = "px-6 py-4"
-        onclick = "event.stopPropagation()" >
-            <
-            div class = "flex items-center space-x-2" >
-            <
-            button onclick = "viewOutletDetail('${code}')"
-        class = "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm btn-hover transition-all duration-300" >
-            Xem <
-            /button>
-        $ {
-            checkPermission('manage') ? `
-                                <div class="relative inline-block text-left">
-                                    <button onclick="toggleDropdown('${code}')" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm btn-hover transition-all duration-300 flex items-center space-x-1">
-                                        <span>⚙️</span>
-                                        <svg class="w-4 h-4 transform transition-transform dropdown-arrow-${code}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </button>
-                                    
-                                    <div id="dropdown-${code}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-30">
-                                        <div class="py-1">
-                                            <button onclick="editOutlet('${code}'); hideDropdown('${code}')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 flex items-center space-x-2">
-                                                <span>✏️</span>
-                                                <span>Chỉnh Sửa Outlet</span>
-                                            </button>
-                                            <button onclick="deleteOutlet('${code}'); hideDropdown('${code}')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 flex items-center space-x-2">
-                                                <span>🗑️</span>
-                                                <span>Xóa Outlet</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ` : ''
-        } <
-        /div> < /
-        td >
-            `;
-                tbody.appendChild(row);
-            }
-            
-            // Load pending outlets sidebar
-            loadPendingOutlets();
-        }
-
-        function loadPendingOutlets() {
-            const pendingList = document.getElementById('pendingOutletsList');
-            const countElement = document.getElementById('pendingOutletCount');
-            const noOutletsElement = document.getElementById('noPendingOutlets');
-            
-            pendingList.innerHTML = '';
-            
-            const pendingOutlets = [];
-            
-            // Find outlets with pending requests or requests needing edits
-            for (const [code, outlet] of Object.entries(outlets)) {
-                const allRequests = outlet.requests || [];
-                const pendingRequests = allRequests.filter(r => !r.completed);
-                
-                // Tìm các yêu cầu cần chỉnh sửa (có editHistory và có edit chưa được fix)
-                const needsEditRequests = allRequests.filter(r => {
-                    if (!r.editHistory || r.editHistory.length === 0) return false;
-                    
-                    // Kiểm tra xem có edit nào chưa được fix không
-                    return r.editHistory.some(edit => !edit.isFixed);
-                });
-                
-                // Đếm riêng các yêu cầu đã hoàn thành nhưng cần sửa
-                const completedButNeedsEdit = allRequests.filter(r => {
-                    return r.completed && r.editHistory && r.editHistory.length > 0 && 
-                           r.editHistory.some(edit => !edit.isFixed);
-                });
-                
-                const totalIssues = pendingRequests.length + needsEditRequests.length;
-                
-                if (totalIssues > 0) {
-                    // Find oldest issue (either pending request or unfixed edit)
-                    let oldestIssue = null;
-                    let oldestDate = null;
-                    
-                    // Check pending requests
-                    if (pendingRequests.length > 0) {
-                        const oldestPending = pendingRequests.sort((a, b) => parseVietnameseDate(a.createdAt) - parseVietnameseDate(b.createdAt))[0];
-                        oldestIssue = { type: 'pending', request: oldestPending };
-                        oldestDate = parseVietnameseDate(oldestPending.createdAt);
-                    }
-                    
-                    // Check edit requests
-                    if (needsEditRequests.length > 0) {
-                        needsEditRequests.forEach(request => {
-                            const unfixedEdits = request.editHistory.filter(edit => !edit.isFixed);
-                            if (unfixedEdits.length > 0) {
-                                const oldestEdit = unfixedEdits.sort((a, b) => parseVietnameseDate(a.timestamp) - parseVietnameseDate(b.timestamp))[0];
-                                const editDate = parseVietnameseDate(oldestEdit.timestamp);
-                                
-                                if (!oldestDate || editDate < oldestDate) {
-                                    oldestIssue = { type: 'edit', request: request, edit: oldestEdit };
-                                    oldestDate = editDate;
-                                }
-                            }
-                        });
-                    }
-                    
-                    pendingOutlets.push({
-                        code,
-                        outlet,
-                        pendingCount: pendingRequests.length,
-                        editCount: needsEditRequests.length,
-                        completedButNeedsEditCount: completedButNeedsEdit.length,
-                        totalRequests: allRequests.length,
-                        totalIssues: totalIssues,
-                        oldestIssue: oldestIssue,
-                        oldestDate: oldestDate
-                    });
-                }
-            }
-            
-            // Update count
-            countElement.textContent = pendingOutlets.length;
-            
-            if (pendingOutlets.length === 0) {
-                noOutletsElement.style.display = 'block';
-                pendingList.style.display = 'none';
-            } else {
-                noOutletsElement.style.display = 'none';
-                pendingList.style.display = 'block';
-                
-                // Sort by oldest issue first (most urgent)
-                pendingOutlets.sort((a, b) => a.oldestDate - b.oldestDate);
-                
-                pendingOutlets.forEach(item => {
-                    const div = document.createElement('div');
-                    
-                    // Different styling based on issue type
-                    const hasEdits = item.editCount > 0;
-                    const hasPending = item.pendingCount > 0;
-                    
-                    if (hasEdits && hasPending) {
-                        div.className = 'bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 p-4 rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer';
-                    } else if (hasEdits) {
-                        div.className = 'bg-gradient-to-r from-orange-50 to-yellow-50 border-l-4 border-orange-500 p-4 rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer';
-                    } else {
-                        div.className = 'bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-400 p-4 rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer';
-                    }
-                    
-                    div.onclick = () => viewOutletDetail(item.code);
-                    
-                    // Calculate days since oldest issue
-                    const daysSince = Math.floor((new Date() - item.oldestDate) / (1000 * 60 * 60 * 24));
-                    const urgencyColor = daysSince > 7 ? 'text-red-600' : daysSince > 3 ? 'text-orange-600' : 'text-yellow-600';
-                    const urgencyIcon = daysSince > 7 ? '🚨' : daysSince > 3 ? '⚠️' : '⏰';
-                    
-                    // Issue type indicator
-                    let issueTypeText = '';
-                    let issueIcon = '';
-                    if (hasEdits && hasPending) {
-                        issueTypeText = `
-        $ {
-            item.pendingCount
-        }
-        chưa xong, $ {
-            item.editCount
-        }
-        cần sửa `;
-                        issueIcon = '🔥';
-                    } else if (hasEdits) {
-                        const completedNeedsEdit = item.completedButNeedsEditCount || 0;
-                        if (completedNeedsEdit > 0) {
-                            issueTypeText = `
-        $ {
-            item.editCount
-        }
-        cần chỉnh sửa($ {
-                completedNeedsEdit
-            }
-            đã xong)
-        `;
-                        } else {
-                            issueTypeText = `
-        $ {
-            item.editCount
-        }
-        cần chỉnh sửa `;
-                        }
-                        issueIcon = '🔧';
-                    } else {
-                        issueTypeText = `
-        $ {
-            item.pendingCount
-        }
-        chưa hoàn thành `;
-                        issueIcon = '⏳';
-                    }
-                    
-                    div.innerHTML = ` <
-            div class = "flex items-start justify-between mb-2" >
-            <
-            div class = "flex-1" >
-            <
-            h4 class = "font-semibold text-gray-800 text-sm" > $ {
-                item.outlet.name
-            } < /h4> <
-        p class = "text-xs text-gray-600 font-mono" > $ {
-            item.code
-        } < /p> <
-        p class = "text-xs text-gray-500" > $ {
-            item.outlet.area
-        } < /p> < /
-        div > <
-            div class = "text-right" >
-            <
-            span class = "bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-semibold" >
-            $ {
-                item.totalIssues
-            }
-        /${item.totalRequests} < /
-        span > <
-            /div> < /
-        div >
-
-            <
-            div class = "mb-2" >
-            <
-            div class = "flex items-center space-x-1 text-xs" >
-            <
-            span > $ {
-                issueIcon
-            } < /span> <
-        span class = "text-gray-700" > $ {
-            issueTypeText
-        } < /span> < /
-        div > <
-            /div>
-
-        <
-        div class = "flex items-center justify-between text-xs" >
-            <
-            div class = "flex items-center space-x-1 ${urgencyColor}" >
-            <
-            span > $ {
-                urgencyIcon
-            } < /span> <
-        span > Cũ nhất: $ {
-            daysSince
-        }
-        ngày < /span> < /
-        div > <
-            button class = "bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs btn-hover transition-all duration-300"
-        onclick = "event.stopPropagation(); viewOutletDetail('${item.code}')" >
-            Xem→ <
-            /button> < /
-        div >
-
-            <
-            div class = "mt-2 text-xs text-gray-600" >
-            <
-            div class = "truncate" >
-            $ {
-                item.oldestIssue.type === 'edit' ?
-                    `🔧 Sửa: ${item.oldestIssue.request.requesterName}` :
-                    `👤 ${item.oldestIssue.request.requesterName}`
-            } <
-            /div> < /
-        div >
-            `;
-                    
-                    pendingList.appendChild(div);
-                });
-            }
-        }
-
-        // Helper function to parse Vietnamese date format
-        function parseVietnameseDate(dateString) {
-            try {
-                // Handle format: "15/01/2024 14:30:00" or "15/01/2024, 14:30:00"
-                const cleanDate = dateString.replace(',', '').trim();
-                const parts = cleanDate.split(' ');
-                
-                if (parts.length >= 2) {
-                    const datePart = parts[0]; // "15/01/2024"
-                    const timePart = parts[1]; // "14:30:00"
-                    
-                    const dateComponents = datePart.split('/');
-                    const timeComponents = timePart.split(':');
-                    
-                    if (dateComponents.length === 3 && timeComponents.length >= 2) {
-                        const day = parseInt(dateComponents[0]);
-                        const month = parseInt(dateComponents[1]) - 1; // Month is 0-indexed
-                        const year = parseInt(dateComponents[2]);
-                        const hour = parseInt(timeComponents[0]);
-                        const minute = parseInt(timeComponents[1]);
-                        const second = timeComponents[2] ? parseInt(timeComponents[2]) : 0;
-                        
-                        return new Date(year, month, day, hour, minute, second);
-                    }
-                }
-                
-                // Fallback: try to parse as is
-                return new Date(dateString);
-            } catch (error) {
-                console.error('Error parsing date:', dateString, error);
-                return new Date(); // Return current date as fallback
-            }
-        }
-
-        function searchOutlet(event) {
-            // Auto-filter as user types
-            if (event && event.type === 'keyup') {
-                filterOutlets();
-                return;
-            }
-            
-            // Manual search button click
-            const searchValue = document.getElementById('searchOutletCode').value.trim();
-            if (!searchValue) {
-                alert('Vui lòng nhập Outlet Code hoặc Tên Outlet');
-                return;
-            }
-            
-            // First try exact code match
-            if (outlets[searchValue]) {
-                viewOutletDetail(searchValue);
-                return;
-            }
-            
-            // Then try to find by name or partial code
-            const searchLower = searchValue.toLowerCase();
-            const matches = [];
-            
-            for (const [code, outlet] of Object.entries(outlets)) {
-                if (code.includes(searchValue) || outlet.name.toLowerCase().includes(searchLower)) {
-                    matches.push({ code, outlet });
-                }
-            }
-            
-            if (matches.length === 1) {
-                // Single match found
-                viewOutletDetail(matches[0].code);
-            } else if (matches.length > 1) {
-                // Multiple matches found
-                let message = `
-        Tìm thấy $ {
-            matches.length
-        }
-        kết quả: \n\ n `;
-                matches.forEach((match, index) => {
-                    message += `
-        $ {
-            index + 1
-        }.$ {
-            match.outlet.name
-        }($ {
-            match.code
-        }) - $ {
-            match.outlet.area
-        }\
-        n `;
-                });
-                message += `\
-        nVui lòng nhập chính xác hơn hoặc sử dụng bộ lọc.
-        `;
-                alert(message);
-            } else {
-                // No matches found
-                if (/^\d{8}$/.test(searchValue)) {
-                    // If search value is exactly 8 digits, offer to create new outlet
-                    if (confirm(`
-        Không tìm thấy outlet với code "${searchValue}".\n\ nBạn có muốn tạo outlet mới với code "${searchValue}"
-        không ? `)) {
-                        document.getElementById('newOutletCode').value = searchValue;
-                        showCreateOutlet();
-                    }
-                } else if (/^\d+$/.test(searchValue)) {
-                    alert(`
-        Không tìm thấy outlet với code "${searchValue}".\n\ n⚠️ Lưu ý: Outlet Code phải có đúng 8 chữ số.\nCode bạn nhập có $ {
-            searchValue.length
-        }
-        chữ số.\n\ nHãy thử tìm kiếm với code 8 số hoặc tên outlet.
-        `);
-                } else {
-                    alert(`
-        Không tìm thấy outlet với từ khóa "${searchValue}".\n\ nHãy thử tìm kiếm với từ khóa khác hoặc sử dụng bộ lọc bên dưới.
-        `);
-                }
-            }
-        }
-
-        function viewOutletDetail(code) {
-            currentOutletCode = code;
-            const outlet = outlets[code];
-            
-            document.getElementById('outletDetailTitle').textContent = `
-        Chi Tiết Outlet: $ {
-            outlet.name
-        }
-        `;
-            document.getElementById('outletDetailInfo').textContent = `
-        Code: $ {
-            code
-        } | Khu vực: $ {
-            outlet.area
-        }
-        `;
-            
-            // Show modal
-            document.getElementById('outletDetailModal').style.display = 'flex';
-            
-            loadRequestList(code);
-            
-            // Highlight selected row
-            highlightSelectedOutlet(code);
-        }
-
-        function closeOutletDetail() {
-            currentOutletCode = null;
-            document.getElementById('outletDetailModal').style.display = 'none';
-            
-            // Remove highlight from all rows
-            document.querySelectorAll('#outletTableBody tr').forEach(row => {
-                row.classList.remove('bg-blue-100', 'border-l-4', 'border-blue-500');
-            });
-        }
-
-        function highlightSelectedOutlet(code) {
-            // Remove previous highlights
-            document.querySelectorAll('#outletTableBody tr').forEach(row => {
-                row.classList.remove('bg-blue-100', 'border-l-4', 'border-blue-500');
-            });
-            
-            // Add highlight to selected row
-            const rows = document.querySelectorAll('#outletTableBody tr');
-            rows.forEach(row => {
-                const codeCell = row.querySelector('td:first-child');
-                if (codeCell && codeCell.textContent === code) {
-                    row.classList.add('bg-blue-100', 'border-l-4', 'border-blue-500');
-                }
-            });
-        }
-
-
-
-        function loadRequestList(code) {
-            const tbody = document.getElementById('requestTableBody');
-            tbody.innerHTML = '';
-            
-            const requests = outlets[code].requests || [];
-            
-            requests.forEach((request, index) => {
-                const row = document.createElement('tr');
-                row.className = 'border-b hover:bg-gray-50';
-                
-                // Get first item type and brand for display
-                const firstItem = request.requestItems && request.requestItems.length > 0 ? request.requestItems[0] : null;
-                const displayType = firstItem ? firstItem.type : (request.type || 'N/A');
-                const displayBrand = firstItem ? firstItem.brand : (request.brand || 'N/A');
-                const itemCount = request.requestItems ? request.requestItems.length : 0;
-                
-                // Calculate edit status
-                const hasEdits = request.editHistory && request.editHistory.length > 0;
-                const hasUnfixedEdits = hasEdits && request.editHistory.some(edit => !edit.isFixed);
-                
-                row.innerHTML = ` <
-        td class = "px-4 py-3 text-center" >
-            <
-            input type = "checkbox"
-        class = "request-checkbox"
-        value = "${request.id}" >
-            <
-            /td> <
-        td class = "px-4 py-3" > $ {
-            index + 1
-        } < /td> <
-        td class = "px-4 py-3" > $ {
-            request.requesterName
-        } < /td> <
-        td class = "px-4 py-3" >
-            <
-            span class = "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm" >
-            $ {
-                displayType
-            }
-        $ {
-            itemCount > 1 ? ` (+${itemCount-1})` : ''
-        } <
-        /span> < /
-        td > <
-            td class = "px-4 py-3" >
-            <
-            span class = "bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-sm" >
-            $ {
-                displayBrand
-            } <
-            /span> < /
-        td > <
-            td class = "px-4 py-3 text-sm text-gray-600" > $ {
-                request.createdAt
-            } < /td> <
-        td class = "px-4 py-3" >
-            $ {
-                request.completed ?
-                    `<div class="space-y-1">
-                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm block">✅ ${request.completedAt}</span>
-                                ${hasUnfixedEdits ? '<span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs block">🔧 Cần sửa</span>' : ''}
-                            </div>` :
-                    `<div class="space-y-1">
-                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm block">⏳ Chưa xong</span>
-                                ${hasUnfixedEdits ? '<span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs block">🔧 Cần sửa</span>' : ''}
-                            </div>`
-            } <
-            /td> <
-        td class = "px-4 py-3" >
-            <
-            div class = "flex flex-col space-y-1" >
-            <
-            button onclick = "editRequest(${request.id})"
-        class = "bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded text-xs btn-hover transition-all duration-300"
-        title = "Chỉnh sửa yêu cầu" > ✏️Sửa($ {
-                hasEdits ? request.editHistory.length : 0
-            }) <
-            /button>
-        $ {
-            hasEdits ?
-                `<span class="text-xs ${hasUnfixedEdits ? 'text-red-600' : 'text-green-600'}">
-                                    ${hasUnfixedEdits ? '🔧 Cần sửa' : '✅ Đã sửa'}
-                                </span>` :
-                '<span class="text-xs text-gray-500">Chưa có sửa</span>'
-        } <
-        /div> < /
-        td > <
-            td class = "px-4 py-3" >
-            <
-            div class = "flex space-x-2" >
-            <
-            button onclick = "viewRequestDetail(${request.id})"
-        class = "bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm btn-hover transition-all duration-300" >
-            Chi Tiết <
-            /button>
-        $ {
-            !request.completed ?
-                (checkPermission('upload') ? `<button onclick="uploadMaquette(${request.id})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm btn-hover transition-all duration-300">
-                                    📤 Upload
-                                </button>` : '<span class="text-xs text-gray-500">Chờ admin upload</span>') :
-                `<div class="flex space-x-1">
-                                    <button onclick="viewMaquette(${request.id})" class="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 rounded text-xs btn-hover transition-all duration-300">
-                                        Xem
-                                    </button>
-                                    ${checkPermission('upload') ? `
-                                        <button onclick="editMaquette(${request.id})" class="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded text-xs btn-hover transition-all duration-300" title="Chỉnh sửa maquette">
-                                            ✏️ Sửa
-                                        </button>
-                                    ` : ''}
-                                </div>`
-                            }
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function toggleSelectAll() {
-            const selectAll = document.getElementById('selectAll');
-            const checkboxes = document.querySelectorAll('.request-checkbox');
-            checkboxes.forEach(cb => cb.checked = selectAll.checked);
-        }
-
-        function showCreateOutlet() {
-            if (!checkPermission('create') && !checkPermission('manage')) {
-                alert('❌ Bạn không có quyền tạo outlet mới!');
-                return;
-            }
-            document.getElementById('createOutletModal').style.display = 'flex';
-        }
-
-        function validateOutletCodeInput(input) {
-            // Remove any non-numeric characters
-            const numericValue = input.value.replace(/[^0-9]/g, '');
-            
-            // Limit to 8 digits maximum
-            const limitedValue = numericValue.slice(0, 8);
-            
-            // Update input value if it was changed
-            if (input.value !== limitedValue) {
-                input.value = limitedValue;
-                
-                // Show warning message temporarily
-                const resultDiv = document.getElementById('codeCheckResult');
-                resultDiv.innerHTML = `
-                    <div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-orange-500">⚠️</span>
-                            <div class="text-orange-700 font-semibold">Đã xóa ký tự không hợp lệ! Chỉ được nhập số và tối đa 8 chữ số.</div>
-                        </div>
-                    </div>
-                `;
-                resultDiv.style.display = 'block';
-                
-                // Hide warning after 3 seconds
-                setTimeout(() => {
-                    if (resultDiv.innerHTML.includes('Đã xóa ký tự không hợp lệ')) {
-                        resultDiv.style.display = 'none';
-                    }
-                }, 3000);
-            }
-            
-            // Show real-time validation status
-            const resultDiv = document.getElementById('codeCheckResult');
-            if (limitedValue.length > 0 && limitedValue.length < 8) {
-                resultDiv.innerHTML = `
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-yellow-500">⏳</span>
-                            <div class="text-yellow-700 font-semibold">Đã nhập ${limitedValue.length}/8 chữ số. Cần thêm ${8 - limitedValue.length} chữ số nữa.</div>
-                        </div>
-                    </div>
-                `;
-                resultDiv.style.display = 'block';
-            } else if (limitedValue.length === 8) {
-                // Check if code exists when exactly 8 digits
-                checkOutletCodeExists(limitedValue);
-            } else if (limitedValue.length === 0) {
-                resultDiv.style.display = 'none';
-            }
-        }
-
-        function checkOutletCodeExists(code) {
-            const resultDiv = document.getElementById('codeCheckResult');
-            
-            if (!code || code.trim() === '') {
-                resultDiv.style.display = 'none';
-                return;
-            }
-            
-            code = code.trim();
-            
-            // Check if code contains only numbers
-            if (!/^\d+$/.test(code)) {
-                resultDiv.innerHTML = `
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-3">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-red-500">❌</span>
-                            <div>
-                                <div class="text-red-700 font-semibold">Code không hợp lệ!</div>
-                                <div class="text-red-600 text-xs mt-1">
-                                    Outlet Code chỉ được chứa số (0-9) và phải đúng 8 chữ số
-                                </div>
-                                <div class="text-red-600 text-xs">
-                                    Ví dụ hợp lệ: 10000001, 20000001, 12345678
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                resultDiv.style.display = 'block';
-                return false;
-            }
-            
-            // Check if code has exactly 8 digits
-            if (code.length !== 8) {
-                resultDiv.innerHTML = `
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-3">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-red-500">❌</span>
-                            <div>
-                                <div class="text-red-700 font-semibold">Code phải có đúng 8 chữ số!</div>
-                                <div class="text-red-600 text-xs mt-1">
-                                    Bạn đã nhập ${code.length} chữ số, cần ${code.length < 8 ? 'thêm ' + (8 - code.length) : 'bớt ' + (code.length - 8)} chữ số
-                                </div>
-                                <div class="text-red-600 text-xs">
-                                    Ví dụ hợp lệ: 10000001, 20000001, 12345678
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                resultDiv.style.display = 'block';
-                return false;
-            }
-            
-            if (outlets[code]) {
-                resultDiv.innerHTML = `
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-3">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-red-500">❌</span>
-                            <div>
-                                <div class="text-red-700 font-semibold">Code đã tồn tại trong hệ thống!</div>
-                                <div class="text-red-600 text-xs mt-1">
-                                    Outlet: "${outlets[code].name}" - ${outlets[code].area}
-                                </div>
-                                <div class="text-red-600 text-xs">
-                                    Vui lòng nhập code khác hoặc tìm kiếm outlet này ở trang chính
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                resultDiv.style.display = 'block';
-                return false;
-            } else {
-                resultDiv.innerHTML = `
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-green-500">✅</span>
-                            <div class="text-green-700 font-semibold">Code hợp lệ và khả dụng! Có thể tạo outlet mới.</div>
-                        </div>
-                    </div>
-                `;
-                resultDiv.style.display = 'block';
-                return true;
-            }
-        }
-
-        function hideCreateOutlet() {
-            document.getElementById('createOutletModal').style.display = 'none';
-            document.getElementById('createOutletForm').reset();
-            document.getElementById('codeCheckResult').style.display = 'none';
-        }
-
-        function showNewRequestForm() {
-            if (!checkPermission('create')) {
-                if (currentUser && currentUser.position === 'SS') {
-                    alert('❌ Chức vụ SS không có quyền tạo yêu cầu mới!\n\nChỉ có SR/TBA mới được tạo yêu cầu. Bạn có thể xem và comment chỉnh sửa các yêu cầu hiện có.');
-                } else {
-                    alert('❌ Bạn không có quyền tạo yêu cầu mới!');
-                }
-                return;
-            }
-            if (!currentOutletCode) {
-                alert('Vui lòng chọn outlet trước');
-                return;
-            }
-            
-            // Tự động điền tên người yêu cầu
-            if (currentUser && currentUser.name) {
-                document.getElementById('requesterName').value = currentUser.name;
-            }
-            
-            document.getElementById('newRequestModal').style.display = 'flex';
-            
-            // Tự động thêm hạng mục đầu tiên nếu chưa có
-            const container = document.getElementById('requestItemsContainer');
-            if (container.children.length === 0) {
-                addRequestItem();
-            }
-        }
-
-        function hideNewRequestForm() {
-            document.getElementById('newRequestModal').style.display = 'none';
-            document.getElementById('newRequestForm').reset();
-            document.getElementById('requestItemsContainer').innerHTML = '';
-            document.getElementById('imagePreview').style.display = 'none';
-            document.getElementById('imagePreview').innerHTML = '';
-        }
-
-        function addRequestItem() {
-            const container = document.getElementById('requestItemsContainer');
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'border border-gray-200 rounded p-3 mb-2 request-item';
-            itemDiv.innerHTML = `
-                <div class="flex items-center justify-between mb-2">
-                    <h4 class="font-semibold text-gray-700 text-sm">Hạng Mục</h4>
-                    <button type="button" onclick="removeRequestItem(this)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs">
-                        Xóa
-                    </button>
-                </div>
-                <div class="space-y-2">
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs text-orange-700 mb-1 font-semibold">Loại *</label>
-                            <select class="w-full px-2 py-1 border-2 border-orange-300 rounded focus:border-orange-500 focus:outline-none item-type text-sm bg-white" onchange="toggleItemFields(this)" required>
-                                <option value="Bảng Hiệu">Bảng Hiệu</option>
-                                <option value="Hộp Đèn">Hộp Đèn</option>
-                                <option value="Logo">Logo</option>
-                                <option value="Khác">Khác</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs text-orange-700 mb-1 font-semibold">Brand *</label>
-                            <select class="w-full px-2 py-1 border-2 border-orange-300 rounded focus:border-orange-500 focus:outline-none item-brand text-sm bg-white" required>
-                                <option value="Tiger">Tiger</option>
-                                <option value="Heineken">Heineken</option>
-                                <option value="Strongbow">Strongbow</option>
-                                <option value="Bivina">Bivina</option>
-                                <option value="Bia Việt">Bia Việt</option>
-                                <option value="Shopname">Shopname</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Custom Type Section -->
-                    <div class="item-custom-section" style="display: none;">
-                        <textarea class="w-full px-2 py-1 border-2 border-orange-300 rounded focus:border-orange-500 focus:outline-none resize-none item-custom-desc text-sm bg-white" rows="2" placeholder="Mô tả yêu cầu khác"></textarea>
-                    </div>
-                    
-                    <!-- Size Section -->
-                    <div class="item-size-section">
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="number" class="w-full px-2 py-1 border-2 border-orange-300 rounded focus:border-orange-500 focus:outline-none item-width text-sm bg-white" min="0" step="0.1" placeholder="Ngang (m)">
-                            <input type="number" class="w-full px-2 py-1 border-2 border-orange-300 rounded focus:border-orange-500 focus:outline-none item-height text-sm bg-white" min="0" step="0.1" placeholder="Cao (m)">
-                        </div>
-                    </div>
-                </div>
-            `;
-            container.appendChild(itemDiv);
-            updateItemNumbers();
-        }
-
-
-
-        function removeRequestItem(button) {
-            button.closest('.request-item').remove();
-            updateItemNumbers();
-        }
-
-        function updateItemNumbers() {
-            const items = document.querySelectorAll('.request-item');
-            items.forEach((item, index) => {
-                const title = item.querySelector('h4');
-                title.textContent = `Hạng Mục ${index + 1}`;
-            });
-        }
-
-        function toggleItemFields(selectElement) {
-            const itemDiv = selectElement.closest('.request-item');
-            const type = selectElement.value;
-            const customSection = itemDiv.querySelector('.item-custom-section');
-            const sizeSection = itemDiv.querySelector('.item-size-section');
-            const notesSection = itemDiv.querySelector('.item-notes-section');
-            
-            customSection.style.display = type === 'Khác' ? 'block' : 'none';
-            sizeSection.style.display = ['Logo', 'Bảng Hiệu', 'Hộp Đèn'].includes(type) ? 'block' : 'none';
-            notesSection.style.display = type === 'Logo' ? 'block' : 'none';
-        }
-
-        // Upload Maquette Form submission
-        document.getElementById('uploadMaquetteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const notes = document.getElementById('completionNotes').value.trim();
-            const fileInput = document.getElementById('maquetteFiles');
-            
-            // Sync files from input to selectedMaquetteFiles if needed
-            if (fileInput.files.length > 0) {
-                const inputFiles = Array.from(fileInput.files);
-                inputFiles.forEach(file => {
-                    const exists = selectedMaquetteFiles.some(f => f.name === file.name && f.size === file.size);
-                    if (!exists) {
-                        selectedMaquetteFiles.push(file);
-                    }
-                });
-            }
-            
-            // Final check for files
-            if (selectedMaquetteFiles.length === 0) {
-                alert('Vui lòng chọn ít nhất 1 file maquette!');
-                return;
-            }
-            
-            // Get file names and data
-            const filePromises = selectedMaquetteFiles.map(file => {
-                return new Promise((resolve) => {
-                    if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            resolve({
-                                name: file.name,
-                                type: file.type,
-                                data: e.target.result
-                            });
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        resolve({
-                            name: file.name,
-                            type: file.type,
-                            data: null // For non-image files, we just store the name
-                        });
-                    }
-                });
-            });
-            
-            Promise.all(filePromises).then(fileData => {
-                // Update request
-                const requestIndex = outlets[currentOutletCode].requests.findIndex(r => r.id === currentRequestId);
-                if (requestIndex !== -1) {
-                    outlets[currentOutletCode].requests[requestIndex].completed = true;
-                    outlets[currentOutletCode].requests[requestIndex].completedAt = new Date().toLocaleString('vi-VN');
-                    outlets[currentOutletCode].requests[requestIndex].maquetteFiles = fileData.map(f => f.name);
-                    outlets[currentOutletCode].requests[requestIndex].maquetteData = fileData;
-                    outlets[currentOutletCode].requests[requestIndex].completionNotes = notes;
-                    
-                    saveData();
-                    loadRequestList(currentOutletCode);
-                    loadOutletList();
-                    hideUploadMaquette();
-                    
-                    alert('✅ Đã xác nhận hoàn thành yêu cầu!');
-                }
-            });
-        });
-
-        // Form submissions
-        document.getElementById('createOutletForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const code = document.getElementById('newOutletCode').value.trim();
-            const name = document.getElementById('newOutletName').value.trim();
-            const area = document.getElementById('newOutletArea').value;
-            
-            if (!code) {
-                alert('❌ Vui lòng nhập Outlet Code!');
-                return;
-            }
-            
-            // Validate code format (must be exactly 8 digits)
-            if (!/^\d{8}$/.test(code)) {
-                alert('❌ Outlet Code không hợp lệ!\n\nCode phải có đúng 8 chữ số (VD: 10000001, 20000001, 12345678)');
-                checkOutletCodeExists(code); // Show the error message
-                return;
-            }
-            
-            // Check if code already exists
-            if (outlets[code]) {
-                alert(`❌ Outlet Code "${code}" đã tồn tại!\n\nOutlet: "${outlets[code].name}" - ${outlets[code].area}\n\nVui lòng nhập code khác hoặc tìm kiếm outlet này ở trang chính.`);
-                checkOutletCodeExists(code); // Show the error message
-                return;
-            }
-            
-            outlets[code] = {
-                name: name,
-                area: area,
-                requests: []
-            };
-            
-            saveData();
-            loadOutletList();
-            hideCreateOutlet();
-            
-            alert(`✅ Tạo outlet thành công!\n\nOutlet Code: ${code}\nTên: ${name}\nKhu vực: ${area}`);
-        });
-
-        document.getElementById('newRequestForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const requesterName = document.getElementById('requesterName').value.trim();
-            const address = document.getElementById('requestAddress').value.trim();
-            const content = document.getElementById('requestContent').value.trim();
-            const imageFiles = document.getElementById('requestImage').files;
-            
-            // Validate required fields
-            if (!requesterName) {
-                alert('❌ Vui lòng nhập tên người yêu cầu!');
-                document.getElementById('requesterName').focus();
-                return;
-            }
-            
-            if (!address) {
-                alert('❌ Vui lòng nhập địa chỉ!');
-                document.getElementById('requestAddress').focus();
-                return;
-            }
-            
-            if (imageFiles.length === 0) {
-                alert('❌ Vui lòng chọn ít nhất 1 hình ảnh!\n\n📷 Hướng dẫn:\n• Up được nhiều hình\n• Chụp cận nội dung cũ (nếu có)\n• Chụp toàn cảnh vị trí');
-                document.getElementById('requestImage').focus();
-                return;
-            }
-            
-            // Get request items
-            const requestItems = [];
-            document.querySelectorAll('.request-item').forEach(itemDiv => {
-                const type = itemDiv.querySelector('.item-type').value;
-                const brand = itemDiv.querySelector('.item-brand').value.trim();
-                const width = itemDiv.querySelector('.item-width').value;
-                const height = itemDiv.querySelector('.item-height').value;
-                const customDesc = itemDiv.querySelector('.item-custom-desc') ? itemDiv.querySelector('.item-custom-desc').value.trim() : '';
-                const notes = itemDiv.querySelector('.item-notes') ? itemDiv.querySelector('.item-notes').value.trim() : '';
-                
-                if (type && brand) {
-                    requestItems.push({
-                        type: type === 'Khác' ? customDesc : type,
-                        brand,
-                        width: width ? parseFloat(width) : null,
-                        height: height ? parseFloat(height) : null,
-                        notes: notes || null
-                    });
-                }
-            });
-            
-            if (requestItems.length === 0) {
-                alert('❌ Vui lòng thêm ít nhất 1 hạng mục khảo sát!');
-                return;
-            }
-            
-            // Process uploaded images
-            const imagePromises = [];
-            for (let i = 0; i < imageFiles.length; i++) {
-                const file = imageFiles[i];
-                const promise = new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        resolve({
-                            name: file.name,
-                            data: e.target.result
-                        });
-                    };
-                    reader.readAsDataURL(file);
-                });
-                imagePromises.push(promise);
-            }
-            
-            Promise.all(imagePromises).then(images => {
-                const newRequest = {
-                    id: Date.now(),
-                    requesterName,
-                    address,
-                    content,
-                    requestItems,
-                    images: images,
-                    createdAt: new Date().toLocaleString('vi-VN')
-                };
-                
-                if (!outlets[currentOutletCode].requests) {
-                    outlets[currentOutletCode].requests = [];
-                }
-                
-                outlets[currentOutletCode].requests.push(newRequest);
-                saveData();
-                loadRequestList(currentOutletCode);
-                loadOutletList();
-                hideNewRequestForm();
-                
-                alert('Tạo yêu cầu thành công!');
-            });
-        });
-
-        function uploadMaquette(requestId) {
-            if (!checkPermission('upload')) {
-                alert('❌ Bạn không có quyền upload maquette!');
-                return;
-            }
-            currentRequestId = requestId;
-            const request = outlets[currentOutletCode].requests.find(r => r.id === requestId);
-            if (!request) return;
-            
-            // Populate request info
-            let requestInfo = `
-                <div><strong>👤 Người yêu cầu:</strong> ${request.requesterName}</div>
-                <div><strong>🕒 Ngày tạo:</strong> ${request.createdAt}</div>
-            `;
-            
-            if (request.requestItems && request.requestItems.length > 0) {
-                requestInfo += `<div><strong>📦 Hạng mục:</strong> ${request.requestItems.length} hạng mục</div>`;
-                request.requestItems.forEach((item, index) => {
-                    requestInfo += `<div class="ml-4 text-sm">• ${item.type} - ${item.shopName}</div>`;
-                });
-            }
-            
-            document.getElementById('requestInfo').innerHTML = requestInfo;
-            
-            document.getElementById('uploadMaquetteModal').style.display = 'flex';
-        }
-
-        function hideUploadMaquette() {
-            document.getElementById('uploadMaquetteModal').style.display = 'none';
-            document.getElementById('uploadMaquetteForm').reset();
-            document.getElementById('maquettePreview').style.display = 'none';
-            document.getElementById('maquettePreview').innerHTML = '';
-            selectedMaquetteFiles = []; // Clear selected files
-            currentRequestId = null;
-        }
-
-        function viewMaquette(requestId) {
-            const request = outlets[currentOutletCode].requests.find(r => r.id === requestId);
-            if (!request || !request.maquetteFiles) return;
-            
-            let content = `
-                <div class="space-y-4">
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <h4 class="font-semibold text-gray-800 mb-2">📋 Thông Tin Yêu Cầu</h4>
-                        <div class="text-sm text-gray-700 space-y-1">
-                            <div><strong>👤 Người yêu cầu:</strong> ${request.requesterName}</div>
-                            <div><strong>🕒 Ngày hoàn thành:</strong> ${request.completedAt}</div>
-            `;
-            
-            if (request.requestItems && request.requestItems.length > 0) {
-                content += `<div><strong>📦 Hạng mục:</strong> ${request.requestItems.length} hạng mục</div>`;
-                request.requestItems.forEach((item, index) => {
-                    content += `<div class="ml-4">• ${item.type} - ${item.shopName}</div>`;
-                });
-            }
-            
-            content += `
-                        </div>
-                    </div>
-            `;
-            
-            if (request.completionNotes) {
-                content += `
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <h4 class="font-semibold text-gray-800 mb-2">📝 Ghi Chú Hoàn Thành</h4>
-                        <p class="text-sm text-gray-700">${request.completionNotes}</p>
-                    </div>
-                `;
-            }
-            
-            content += `
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <h4 class="font-semibold text-gray-800 mb-2">🖼️ Maquette Files (${request.maquetteFiles.length} file)</h4>
-            `;
-            
-            // Display maquette files with preview
-            if (request.maquetteData && request.maquetteData.length > 0) {
-                content += `<div class="grid grid-cols-2 gap-4 mt-3">`;
-                
-                request.maquetteData.forEach((fileData, index) => {
-                    if (fileData.type && fileData.type.startsWith('image/') && fileData.data) {
-                        content += `
-                            <div class="text-center">
-                                <img src="${fileData.data}" alt="${fileData.name}" class="w-full h-32 object-cover rounded-lg border-2 border-gray-200 cursor-pointer hover:border-blue-400 transition-colors" onclick="showFullImage('${fileData.data}', '${fileData.name}')">
-                                <p class="text-xs text-gray-600 mt-1">${fileData.name}</p>
-                                <p class="text-xs text-green-600">📷 Hình ảnh</p>
-                            </div>
-                        `;
-                    } else {
-                        const fileIcon = fileData.type === 'application/pdf' ? '📄' : '📎';
-                        const fileColor = fileData.type === 'application/pdf' ? 'text-red-600' : 'text-gray-600';
-                        const fileType = fileData.type === 'application/pdf' ? 'PDF File' : 'File';
-                        
-                        content += `
-                            <div class="text-center">
-                                <div class="w-full h-32 bg-gray-100 rounded-lg border-2 border-gray-200 flex flex-col items-center justify-center">
-                                    <span class="text-4xl mb-2">${fileIcon}</span>
-                                    <p class="text-xs text-gray-600 px-2 truncate">${fileData.name}</p>
-                                    <p class="text-xs ${fileColor}">${fileType}</p>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                
-                content += `</div>`;
-            } else {
-                // Fallback for old data format
-                content += `
-                    <div class="text-sm text-gray-700">
-                        <p><strong>Số lượng file:</strong> ${request.maquetteFiles.length} file(s)</p>
-                        <div class="mt-2 space-y-1">
-                `;
-                
-                request.maquetteFiles.forEach((file, index) => {
-                    content += `<div>📎 File ${index + 1}: ${file}</div>`;
-                });
-                
-                content += `
-                        </div>
-                    </div>
-                `;
-            }
-            
-            content += `
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('maquetteContent').innerHTML = content;
-            document.getElementById('viewMaquetteModal').style.display = 'flex';
-        }
-
-        function hideViewMaquette() {
-            document.getElementById('viewMaquetteModal').style.display = 'none';
-        }
-
-        function viewRequestDetail(requestId) {
-            const request = outlets[currentOutletCode].requests.find(r => r.id === requestId);
-            if (!request) return;
-            
-            // Find request index for display
-            const requestIndex = outlets[currentOutletCode].requests.findIndex(r => r.id === requestId);
-            const requestNumber = requestIndex + 1;
-            
-            // Update modal title
-            const modalTitle = document.querySelector('#viewMaquetteModal h3');
-            modalTitle.textContent = `Xem Chi Tiết Yêu Cầu Số ${requestNumber}`;
-            
-            // Create modal content instead of alert
-            let content = `
-                <div class="space-y-4">
-                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                        <h4 class="font-semibold text-orange-800 mb-2">Thông Tin Cơ Bản</h4>
-                        <div class="text-sm text-gray-700 space-y-1">
-                            <div><strong>Người yêu cầu:</strong> ${request.requesterName}</div>
-                            <div><strong>Địa chỉ:</strong> ${request.address}</div>
-                            <div><strong>Ngày tạo:</strong> ${request.createdAt}</div>
-                        </div>
-                    </div>
-            `;
-            
-            if (request.content) {
-                content += `
-                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                        <h4 class="font-semibold text-orange-800 mb-2">Nội Dung Bảng Hiệu</h4>
-                        <p class="text-sm text-gray-700">${request.content}</p>
-                    </div>
-                `;
-            }
-            
-            if (request.requestItems && request.requestItems.length > 0) {
-                content += `
-                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                        <h4 class="font-semibold text-orange-800 mb-2">Hạng Mục Khảo Sát (${request.requestItems.length} hạng mục)</h4>
-                        <div class="text-sm text-gray-700 space-y-2">
-                `;
-                request.requestItems.forEach((item, index) => {
-                    content += `
-                        <div class="border-l-4 border-purple-300 pl-3">
-                            <div><strong>Hạng mục ${index + 1}:</strong> ${item.type}</div>
-                            <div><strong>🏷️ Brand:</strong> ${item.brand}</div>
-                    `;
-                    if (item.width && item.height) {
-                        content += `<div><strong>Kích thước:</strong> ${item.width} x ${item.height} m</div>`;
-                    }
-                    if (item.notes) {
-                        content += `<div><strong>Ghi chú:</strong> ${item.notes}</div>`;
-                    }
-                    content += `</div>`;
-                });
-                content += `
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Display uploaded images
-            if (request.images && request.images.length > 0) {
-                content += `
-                    <div class="bg-orange-50 p-4 rounded-lg">
-                        <h4 class="font-semibold text-gray-800 mb-2">📷 Hình Ảnh Thực Tế (${request.images.length} ảnh)</h4>
-                        <div class="grid grid-cols-2 gap-4 mt-3">
-                `;
-                request.images.forEach((image, index) => {
-                    content += `
-                        <div class="text-center">
-                            <img src="${image.data}" alt="${image.name}" class="w-full h-32 object-cover rounded-lg border-2 border-gray-200 cursor-pointer hover:border-blue-400 transition-colors" onclick="showFullImage('${image.data}', '${image.name}')">
-                            <p class="text-xs text-gray-600 mt-1">${image.name}</p>
-                        </div>
-                    `;
-                });
-                content += `
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Display edit history if exists
-            if (request.editHistory && request.editHistory.length > 0) {
-                const hasUnfixedEdits = request.editHistory.some(edit => !edit.isFixed);
-                
-                content += `
-                    <div class="bg-orange-50 p-4 rounded-lg">
-                        <h4 class="font-semibold text-gray-800 mb-2">✏️ Lịch Sử Chỉnh Sửa (${request.editHistory.length} lần)</h4>
-                        <div class="space-y-2 max-h-40 overflow-y-auto">
-                `;
-                
-                // Sort by newest first
-                const sortedHistory = [...request.editHistory].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                
-                sortedHistory.forEach((edit, index) => {
-                    content += `
-                        <div class="border-l-4 ${edit.isFixed ? 'border-green-400 bg-green-50' : 'border-red-400 bg-red-50'} p-2 rounded-r-lg">
-                            <div class="text-xs text-gray-600 mb-1">
-                                📅 ${edit.timestamp}
-                                ${edit.isFixed ? '<span class="ml-2 text-green-600 font-semibold">✅ Đã sửa xong</span>' : '<span class="ml-2 text-red-600 font-semibold">🔧 Cần sửa</span>'}
-                            </div>
-                            <div class="text-sm text-gray-800">${edit.content}</div>
-                        </div>
-                    `;
-                });
-                
-                content += `
-                        </div>
-                        <div class="mt-2 text-xs ${hasUnfixedEdits ? 'text-red-600' : 'text-green-600'}">
-                            ${hasUnfixedEdits ? '🔧 Có yêu cầu chỉnh sửa chưa hoàn thành' : '✅ Tất cả chỉnh sửa đã hoàn thành'}
-                        </div>
-                    </div>
-                `;
-            }
-
-            if (request.completed) {
-                content += `
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <h4 class="font-semibold text-gray-800 mb-2">✅ Trạng Thái Hoàn Thành</h4>
-                        <div class="text-sm text-gray-700 space-y-1">
-                            <div><strong>🕒 Ngày hoàn thành:</strong> ${request.completedAt}</div>
-                `;
-                if (request.completionNotes) {
-                    content += `<div><strong>📝 Ghi chú hoàn thành:</strong> ${request.completionNotes}</div>`;
-                }
-                if (request.maquetteFiles && request.maquetteFiles.length > 0) {
-                    content += `<div><strong>📎 Files đã upload:</strong> ${request.maquetteFiles.length} file(s)</div>`;
-                }
-                content += `
-                        </div>
-                    </div>
-                `;
-            } else {
-                content += `
-                    <div class="bg-yellow-50 p-4 rounded-lg">
-                        <h4 class="font-semibold text-gray-800 mb-2">⏳ Trạng Thái</h4>
-                        <p class="text-sm text-gray-700">Yêu cầu chưa được hoàn thành</p>
-                    </div>
-                `;
-            }
-            
-            content += `</div>`;
-            
-            // Show in modal
-            document.getElementById('maquetteContent').innerHTML = content;
-            document.getElementById('viewMaquetteModal').style.display = 'flex';
-        }
-
-        function showFullImage(imageSrc, imageName) {
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4';
-            modal.innerHTML = `
-                <div class="max-w-4xl max-h-full bg-white rounded-lg p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold">${imageName}</h3>
-                        <button onclick="this.closest('.fixed').remove()" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded">
-                            ✕ Đóng
-                        </button>
-                    </div>
-                    <img src="${imageSrc}" alt="${imageName}" class="max-w-full max-h-96 object-contain mx-auto">
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
-        // Image preview functionality
-        document.getElementById('requestImage').addEventListener('change', function(e) {
-            const files = e.target.files;
-            const preview = document.getElementById('imagePreview');
-            
-            if (files.length > 0) {
-                preview.innerHTML = '';
-                preview.style.display = 'grid';
-                
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        const div = document.createElement('div');
-                        div.className = 'relative';
-                        div.innerHTML = `
-                            <img src="${e.target.result}" alt="${file.name}" class="w-full h-20 object-cover rounded border">
-                            <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 rounded-b truncate">
-                                ${file.name}
-                            </div>
-                        `;
-                        preview.appendChild(div);
-                    };
-                    
-                    reader.readAsDataURL(file);
-                }
-            } else {
-                preview.style.display = 'none';
-            }
-        });
-
-        // Maquette files management
-        let selectedMaquetteFiles = [];
-
-        // Maquette preview functionality
-        document.getElementById('maquetteFiles').addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            
-            // Add new files to selected files array
-            files.forEach(file => {
-                // Check if file already exists
-                const exists = selectedMaquetteFiles.some(f => f.name === file.name && f.size === file.size);
-                if (!exists) {
-                    selectedMaquetteFiles.push(file);
-                }
-            });
-            
-            updateMaquettePreview();
-            
-            // Debug log
-            console.log('Files selected:', selectedMaquetteFiles.length);
-            
-            // Don't clear the input - keep files there for form validation
-            // e.target.value = '';
-        });
-
-        function updateMaquettePreview() {
-            const preview = document.getElementById('maquettePreview');
-            
-            if (selectedMaquetteFiles.length > 0) {
-                preview.innerHTML = '';
-                preview.style.display = 'grid';
-                
-                selectedMaquetteFiles.forEach((file, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-3 text-center group hover:border-blue-400 transition-colors';
-                    
-                    // Delete button
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.type = 'button';
-                    deleteBtn.className = 'absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity z-10';
-                    deleteBtn.innerHTML = '✕';
-                    deleteBtn.onclick = () => removeMaquetteFile(index);
-                    
-                    if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            div.innerHTML = `
-                                <img src="${e.target.result}" alt="${file.name}" class="w-full h-24 object-cover rounded mb-2 cursor-pointer hover:opacity-75 transition-opacity" onclick="showFullMaquetteImage('${e.target.result}', '${file.name}')">
-                                <p class="text-xs text-gray-600 truncate">${file.name}</p>
-                                <p class="text-xs text-green-600">📷 Hình ảnh</p>
-                            `;
-                            div.appendChild(deleteBtn);
-                        };
-                        reader.readAsDataURL(file);
-                    } else if (file.type === 'application/pdf') {
-                        div.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mb-2 cursor-pointer hover:bg-red-200 transition-colors" onclick="alert('PDF Preview: ${file.name}\\nKích thước: ${(file.size/1024/1024).toFixed(2)} MB')">
-                                    <span class="text-2xl">📄</span>
-                                </div>
-                                <p class="text-xs text-gray-600 truncate">${file.name}</p>
-                                <p class="text-xs text-red-600">PDF File</p>
-                                <p class="text-xs text-gray-500">${(file.size/1024/1024).toFixed(2)} MB</p>
-                            </div>
-                        `;
-                        div.appendChild(deleteBtn);
-                    } else {
-                        div.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-2">
-                                    <span class="text-2xl">📎</span>
-                                </div>
-                                <p class="text-xs text-gray-600 truncate">${file.name}</p>
-                                <p class="text-xs text-gray-600">File</p>
-                                <p class="text-xs text-gray-500">${(file.size/1024/1024).toFixed(2)} MB</p>
-                            </div>
-                        `;
-                        div.appendChild(deleteBtn);
-                    }
-                    
-                    preview.appendChild(div);
-                });
-            } else {
-                preview.style.display = 'none';
-            }
-        }
-
-        function removeMaquetteFile(index) {
-            selectedMaquetteFiles.splice(index, 1);
-            updateMaquettePreview();
-        }
-
-        function showFullMaquetteImage(imageSrc, imageName) {
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4';
-            modal.innerHTML = `
-                <div class="max-w-4xl max-h-full bg-white rounded-lg p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold">🖼️ ${imageName}</h3>
-                        <button onclick="this.closest('.fixed').remove()" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded">
-                            ✕ Đóng
-                        </button>
-                    </div>
-                    <img src="${imageSrc}" alt="${imageName}" class="max-w-full max-h-96 object-contain mx-auto rounded-lg shadow-lg">
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
-        function editMaquette(requestId) {
-            if (!checkPermission('upload')) {
-                alert('❌ Bạn không có quyền chỉnh sửa maquette!');
-                return;
-            }
-            if (!currentOutletCode) {
-                alert('❌ Lỗi: Không tìm thấy outlet hiện tại');
-                return;
-            }
-            
-            const request = outlets[currentOutletCode].requests.find(r => r.id === requestId);
-            if (!request) {
-                alert('❌ Lỗi: Không tìm thấy yêu cầu');
-                return;
-            }
-            
-            if (!request.completed) {
-                alert('⚠️ Yêu cầu này chưa được hoàn thành');
-                return;
-            }
-            
-            currentRequestId = requestId;
-            
-            // Populate request info
-            let requestInfo = `
-                <div><strong>👤 Người yêu cầu:</strong> ${request.requesterName}</div>
-                <div><strong>🕒 Hoàn thành lúc:</strong> ${request.completedAt}</div>
-            `;
-            
-            if (request.requestItems && request.requestItems.length > 0) {
-                requestInfo += `<div><strong>📦 Hạng mục:</strong> ${request.requestItems.length} hạng mục</div>`;
-            }
-            
-            document.getElementById('editRequestInfo').innerHTML = requestInfo;
-            
-            // Show current files
-            let currentFilesHtml = '';
-            if (request.maquetteFiles && request.maquetteFiles.length > 0) {
-                currentFilesHtml = `<div class="text-sm"><strong>📎 Files hiện tại (${request.maquetteFiles.length}):</strong></div>`;
-                request.maquetteFiles.forEach((file, index) => {
-                    currentFilesHtml += `<div class="text-xs text-gray-600 ml-2">• ${file}</div>`;
-                });
-            } else {
-                currentFilesHtml = '<div class="text-sm text-gray-500">Không có files</div>';
-            }
-            document.getElementById('currentMaquetteFiles').innerHTML = currentFilesHtml;
-            
-            // Set current notes
-            document.getElementById('editCompletionNotes').value = request.completionNotes || '';
-            
-            // Clear file input and preview
-            document.getElementById('editMaquetteFiles').value = '';
-            document.getElementById('editMaquettePreview').style.display = 'none';
-            document.getElementById('editMaquettePreview').innerHTML = '';
-            
-            // Show modal
-            document.getElementById('editMaquetteModal').style.display = 'flex';
-        }
-
-        function hideEditMaquette() {
-            document.getElementById('editMaquetteModal').style.display = 'none';
-            document.getElementById('editMaquetteForm').reset();
-            document.getElementById('editMaquettePreview').style.display = 'none';
-            document.getElementById('editMaquettePreview').innerHTML = '';
-            currentRequestId = null;
-        }
-
-        // Edit Maquette Form submission
-        document.getElementById('editMaquetteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const notes = document.getElementById('editCompletionNotes').value.trim();
-            const fileInput = document.getElementById('editMaquetteFiles');
-            const hasNewFiles = fileInput.files.length > 0;
-            
-            const requestIndex = outlets[currentOutletCode].requests.findIndex(r => r.id === currentRequestId);
-            if (requestIndex === -1) {
-                alert('❌ Lỗi: Không tìm thấy yêu cầu');
-                return;
-            }
-            
-            // Update notes regardless of files
-            outlets[currentOutletCode].requests[requestIndex].completionNotes = notes;
-            
-            if (hasNewFiles) {
-                // Process new files if uploaded
-                const newFiles = Array.from(fileInput.files);
-                const filePromises = newFiles.map(file => {
-                    return new Promise((resolve) => {
-                        if (file.type.startsWith('image/')) {
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                resolve({
-                                    name: file.name,
-                                    type: file.type,
-                                    data: e.target.result
-                                });
-                            };
-                            reader.readAsDataURL(file);
-                        } else {
-                            resolve({
-                                name: file.name,
-                                type: file.type,
-                                data: null
-                            });
-                        }
-                    });
-                });
-                
-                Promise.all(filePromises).then(fileData => {
-                    // Replace old files with new ones
-                    outlets[currentOutletCode].requests[requestIndex].maquetteFiles = fileData.map(f => f.name);
-                    outlets[currentOutletCode].requests[requestIndex].maquetteData = fileData;
-                    
-                    // Update completion time
-                    outlets[currentOutletCode].requests[requestIndex].completedAt = new Date().toLocaleString('vi-VN');
-                    
-                    saveData();
-                    loadRequestList(currentOutletCode);
-                    loadOutletList();
-                    hideEditMaquette();
-                    
-                    alert('✅ Đã cập nhật maquette thành công!\n\n• Đã thay đổi files maquette\n• Đã cập nhật ghi chú\n• Đã cập nhật thời gian hoàn thành');
-                });
-            } else {
-                // Only update notes, keep existing files
-                saveData();
-                loadRequestList(currentOutletCode);
-                loadOutletList();
-                hideEditMaquette();
-                
-                alert('✅ Đã cập nhật ghi chú thành công!\n\nFiles maquette giữ nguyên như cũ.');
-            }
-        });
-
-        // Edit maquette file preview
-        document.getElementById('editMaquetteFiles').addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            const preview = document.getElementById('editMaquettePreview');
-            
-            if (files.length > 0) {
-                preview.innerHTML = '';
-                preview.style.display = 'grid';
-                
-                files.forEach((file, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'relative bg-gray-50 border-2 border-dashed border-orange-300 rounded-lg p-3 text-center';
-                    
-                    if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            div.innerHTML = `
-                                <img src="${e.target.result}" alt="${file.name}" class="w-full h-24 object-cover rounded mb-2">
-                                <p class="text-xs text-gray-600 truncate">${file.name}</p>
-                                <p class="text-xs text-green-600">📷 Hình ảnh mới</p>
-                            `;
-                        };
-                        reader.readAsDataURL(file);
-                    } else if (file.type === 'application/pdf') {
-                        div.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mb-2">
-                                    <span class="text-2xl">📄</span>
-                                </div>
-                                <p class="text-xs text-gray-600 truncate">${file.name}</p>
-                                <p class="text-xs text-red-600">PDF mới</p>
-                            </div>
-                        `;
-                    } else {
-                        div.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-2">
-                                    <span class="text-2xl">📎</span>
-                                </div>
-                                <p class="text-xs text-gray-600 truncate">${file.name}</p>
-                                <p class="text-xs text-gray-600">File mới</p>
-                            </div>
-                        `;
-                    }
-                    
-                    preview.appendChild(div);
-                });
-            } else {
-                preview.style.display = 'none';
-            }
-        });
-
-        function editOutlet(code) {
-            if (!checkPermission('manage')) {
-                alert('❌ Bạn không có quyền chỉnh sửa outlet!');
-                return;
-            }
-            const outlet = outlets[code];
-            if (!outlet) {
-                alert('❌ Không tìm thấy outlet');
-                return;
-            }
-            
-            // Populate form with current data
-            document.getElementById('editOutletCode').value = code;
-            document.getElementById('editOutletName').value = outlet.name;
-            document.getElementById('editOutletArea').value = outlet.area;
-            
-            // Show modal
-            document.getElementById('editOutletModal').style.display = 'flex';
-        }
-
-        function hideEditOutlet() {
-            document.getElementById('editOutletModal').style.display = 'none';
-            document.getElementById('editOutletForm').reset();
-        }
-
-        function deleteOutlet(code) {
-            if (!checkPermission('manage')) {
-                alert('❌ Bạn không có quyền xóa outlet!');
-                return;
-            }
-            const outlet = outlets[code];
-            if (!outlet) {
-                alert('❌ Không tìm thấy outlet');
-                return;
-            }
-            
-            const requestCount = outlet.requests ? outlet.requests.length : 0;
-            const pendingCount = outlet.requests ? outlet.requests.filter(r => !r.completed).length : 0;
-            
-            // First confirmation
-            let confirmMessage = `🗑️ XÁC NHẬN XÓA OUTLET\n\n`;
-            confirmMessage += `📋 Thông tin outlet:\n`;
-            confirmMessage += `• Code: ${code}\n`;
-            confirmMessage += `• Tên: ${outlet.name}\n`;
-            confirmMessage += `• Khu vực: ${outlet.area}\n`;
-            confirmMessage += `• Tổng yêu cầu: ${requestCount}\n`;
-            confirmMessage += `• Chưa hoàn thành: ${pendingCount}\n\n`;
-            
-            if (requestCount > 0) {
-                confirmMessage += `⚠️ CẢNH BÁO: Outlet này có ${requestCount} yêu cầu!\n`;
-                if (pendingCount > 0) {
-                    confirmMessage += `🚨 Trong đó có ${pendingCount} yêu cầu chưa hoàn thành!\n`;
-                }
-                confirmMessage += `\n❗ Việc xóa sẽ xóa vĩnh viễn tất cả dữ liệu!\n`;
-                confirmMessage += `\nBạn có chắc chắn muốn tiếp tục?`;
-            } else {
-                confirmMessage += `ℹ️ Outlet này chưa có yêu cầu nào.\n`;
-                confirmMessage += `\nBạn có chắc chắn muốn xóa outlet này?`;
-            }
-            
-            const firstConfirm = confirm(confirmMessage);
-            if (!firstConfirm) {
-                return;
-            }
-            
-            // Second confirmation (always show for any outlet)
-            let secondMessage = `🚨 XÁC NHẬN LẦN CUỐI!\n\n`;
-            secondMessage += `Bạn sắp xóa vĩnh viễn outlet:\n`;
-            secondMessage += `"${outlet.name}" (${code})\n\n`;
-            
-            if (requestCount > 0) {
-                secondMessage += `⚠️ Sẽ mất ${requestCount} yêu cầu`;
-                if (pendingCount > 0) {
-                    secondMessage += ` (${pendingCount} chưa xong)`;
-                }
-                secondMessage += `!\n`;
-            }
-            
-            secondMessage += `\n❌ KHÔNG THỂ KHÔI PHỤC SAU KHI XÓA!\n`;
-            secondMessage += `\nBạn có thực sự muốn xóa không?`;
-            
-            const finalConfirm = confirm(secondMessage);
-            if (!finalConfirm) {
-                return;
-            }
-            
-            try {
-                // Delete outlet
-                delete outlets[code];
-                saveData();
-                
-                // Hide detail section if current outlet is deleted
-                if (currentOutletCode === code) {
-                    document.getElementById('outletDetailSection').style.display = 'none';
-                    currentOutletCode = null;
-                }
-                
-                // Reload lists
-                loadOutletList();
-                
-                alert(`✅ ĐÃ XÓA THÀNH CÔNG!\n\nOutlet "${outlet.name}" (${code}) đã được xóa vĩnh viễn.`);
-                
-            } catch (error) {
-                console.error('Error deleting outlet:', error);
-                alert('❌ Lỗi khi xóa outlet. Vui lòng thử lại!');
-            }
-        }
-
-        // Edit Outlet Form submission
-        document.getElementById('editOutletForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const code = document.getElementById('editOutletCode').value.trim();
-            const name = document.getElementById('editOutletName').value.trim();
-            const area = document.getElementById('editOutletArea').value;
-            
-            if (!outlets[code]) {
-                alert('❌ Lỗi: Không tìm thấy outlet');
-                return;
-            }
-            
-            // Update outlet data
-            outlets[code].name = name;
-            outlets[code].area = area;
-            
-            saveData();
-            loadOutletList();
-            hideEditOutlet();
-            
-            // Update detail section if currently viewing this outlet
-            if (currentOutletCode === code) {
-                document.getElementById('outletDetailTitle').textContent = `Chi Tiết Outlet: ${name}`;
-                document.getElementById('outletDetailInfo').textContent = `Code: ${code} | Khu vực: ${area}`;
-            }
-            
-            alert(`✅ Đã cập nhật outlet "${name}" thành công!`);
-        });
-
-        function editRequest(requestId) {
-            if (!currentOutletCode) {
-                alert('❌ Lỗi: Không tìm thấy outlet hiện tại');
-                return;
-            }
-            
-            const request = outlets[currentOutletCode].requests.find(r => r.id === requestId);
-            if (!request) {
-                alert('❌ Lỗi: Không tìm thấy yêu cầu');
-                return;
-            }
-            
-            currentRequestId = requestId;
-            
-            // Populate basic request info
-            let basicInfo = `
-                <div><strong>👤 Người yêu cầu:</strong> ${request.requesterName}</div>
-                <div><strong>🕒 Ngày tạo:</strong> ${request.createdAt}</div>
-                <div><strong>📍 Địa chỉ:</strong> ${request.address}</div>
-            `;
-            
-            if (request.requestItems && request.requestItems.length > 0) {
-                basicInfo += `<div><strong>📦 Hạng mục:</strong> ${request.requestItems.length} hạng mục</div>`;
-            }
-            
-            document.getElementById('editRequestBasicInfo').innerHTML = basicInfo;
-            
-            // Update UI based on user role
-            updateEditRequestUI();
-            
-            // Load edit history
-            loadEditHistory(request);
-            
-            // Clear form
-            document.getElementById('editRequestContent').value = '';
-            
-            // Show modal
-            document.getElementById('editRequestModal').style.display = 'flex';
-        }
-
-        function updateEditRequestUI() {
-            const isAdmin = currentUser && currentUser.role === 'admin';
-            
-            const commentRoleTitle = document.getElementById('commentRoleTitle');
-            const commentLabel = document.getElementById('commentLabel');
-            const commentHint = document.getElementById('commentHint');
-            const textarea = document.getElementById('editRequestContent');
-            const markDoneBtn = document.getElementById('markDoneBtn');
-            
-            if (isAdmin) {
-                // Admin - có cả nút Gửi và nút Xong
-                commentRoleTitle.textContent = 'Yêu Cầu Chỉnh Sửa';
-                commentLabel.textContent = 'Nội Dung *';
-                commentHint.textContent = 'Mô tả chi tiết';
-                textarea.placeholder = 'Nhập nội dung...';
-                markDoneBtn.textContent = 'Xong';
-                markDoneBtn.style.display = 'block';
-            } else {
-                // User - chỉ có nút Gửi
-                commentRoleTitle.textContent = 'Yêu Cầu Chỉnh Sửa';
-                commentLabel.textContent = 'Nội Dung *';
-                commentHint.textContent = 'Mô tả chi tiết';
-                textarea.placeholder = 'Nhập nội dung...';
-                markDoneBtn.style.display = 'none';
-            }
-        }
-
-        function loadEditHistory(request) {
-            const historyContainer = document.getElementById('editHistoryList');
-            const historyCount = document.getElementById('editHistoryCount');
-            
-            if (!request.editHistory || request.editHistory.length === 0) {
-                historyContainer.innerHTML = '<div class="text-center text-gray-500 text-sm py-4">Chưa có chỉnh sửa nào</div>';
-                historyCount.textContent = '0';
-                return;
-            }
-            
-            historyContainer.innerHTML = '';
-            historyCount.textContent = request.editHistory.length;
-            
-            // Sort by newest first
-            const sortedHistory = [...request.editHistory].sort((a, b) => parseVietnameseDate(b.timestamp) - parseVietnameseDate(a.timestamp));
-            
-            sortedHistory.forEach((edit, index) => {
-                const div = document.createElement('div');
-                div.className = `border-l-4 ${edit.isFixed ? 'border-green-400 bg-green-50' : 'border-orange-400 bg-orange-50'} p-3 rounded-r-lg mb-2`;
-                
-                // Author info with role-based styling
-                const authorName = edit.authorName || (edit.author === 'Admin' ? 'Admin' : 'User');
-                let authorDisplay = '';
-                
-                if (edit.author === 'Admin') {
-                    authorDisplay = `<span class="text-red-600 font-semibold">🔧 ${authorName} (Admin)</span>`;
-                } else if (edit.author === 'SR/TBA') {
-                    authorDisplay = `<span class="text-blue-600 font-semibold">👤 ${authorName} (SR/TBA)</span>`;
-                } else if (edit.author === 'SS') {
-                    authorDisplay = `<span class="text-green-600 font-semibold">👥 ${authorName} (SS)</span>`;
-                } else {
-                    authorDisplay = `<span class="text-gray-600 font-semibold">📝 ${authorName}</span>`;
-                }
-                
-                div.innerHTML = `
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="text-xs text-gray-600">
-                            ${authorDisplay} • ${edit.timestamp}
-                        </div>
-                        <span class="text-xs ${edit.isFixed ? 'text-green-600 bg-green-100' : 'text-orange-600 bg-orange-100'} px-2 py-1 rounded-full">
-                            ${edit.isFixed ? '✅ Đã sửa' : '🔧 Cần sửa'}
-                        </span>
-                    </div>
-                    <div class="text-sm text-gray-800">${edit.content}</div>
-                `;
-                
-                historyContainer.appendChild(div);
-            });
-        }
-
-        // Helper function to calculate time ago
-        function getTimeAgo(date) {
-            const now = new Date();
-            const diffMs = now - date;
-            const diffMins = Math.floor(diffMs / (1000 * 60));
-            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-            
-            if (diffMins < 1) return 'Vừa xong';
-            if (diffMins < 60) return `${diffMins} phút trước`;
-            if (diffHours < 24) return `${diffHours} giờ trước`;
-            if (diffDays < 7) return `${diffDays} ngày trước`;
-            return `${Math.floor(diffDays / 7)} tuần trước`;
-        }
-
-        function hideEditRequest() {
-            document.getElementById('editRequestModal').style.display = 'none';
-            document.getElementById('editRequestForm').reset();
-            currentRequestId = null;
-        }
-
-        function submitComment(isFixed) {
-            const content = document.getElementById('editRequestContent').value.trim();
-            
-            if (!content) {
-                alert('❌ Vui lòng nhập nội dung!');
-                return;
-            }
-            
-            const requestIndex = outlets[currentOutletCode].requests.findIndex(r => r.id === currentRequestId);
-            if (requestIndex === -1) {
-                alert('❌ Lỗi: Không tìm thấy yêu cầu');
-                return;
-            }
-            
-            // Initialize edit history if not exists
-            if (!outlets[currentOutletCode].requests[requestIndex].editHistory) {
-                outlets[currentOutletCode].requests[requestIndex].editHistory = [];
-            }
-            
-            const isAdmin = currentUser && currentUser.role === 'admin';
-            
-            // Add new edit entry
-            const newEdit = {
-                id: Date.now(),
-                content: content,
-                timestamp: new Date().toLocaleString('vi-VN'),
-                isFixed: isFixed,
-                author: isAdmin ? 'Admin' : currentUser.position || 'User',
-                authorName: currentUser.name || 'Unknown User',
-                authorEmail: currentUser.email || null
-            };
-            
-            outlets[currentOutletCode].requests[requestIndex].editHistory.push(newEdit);
-            
-            // If marked as fixed, mark all previous edits as fixed too
-            if (isFixed) {
-                outlets[currentOutletCode].requests[requestIndex].editHistory.forEach(edit => {
-                    edit.isFixed = true;
-                });
-            }
-            
-            saveData();
-            loadRequestList(currentOutletCode);
-            loadOutletList();
-            
-            if (isFixed) {
-                alert(`✅ Đã lưu và đánh dấu hoàn thành!\n\nTất cả yêu cầu chỉnh sửa đã được đánh dấu là hoàn thành.`);
-                hideEditRequest();
-            } else {
-                alert(`💬 Đã gửi yêu cầu chỉnh sửa!\n\nComment đã được lưu vào lịch sử. Modal vẫn mở để bạn có thể tiếp tục thêm comment.`);
-                
-                // Clear form but keep modal open
-                document.getElementById('editRequestContent').value = '';
-                
-                // Reload edit history to show new comment
-                const request = outlets[currentOutletCode].requests.find(r => r.id === currentRequestId);
-                if (request) {
-                    loadEditHistory(request);
-                }
-            }
-        }
-
-
-
-        // Character counter for edit request textarea
-        document.addEventListener('DOMContentLoaded', function() {
-            const textarea = document.getElementById('editRequestContent');
-            const charCount = document.getElementById('charCount');
-            
-            if (textarea && charCount) {
-                textarea.addEventListener('input', function() {
-                    const count = this.value.length;
-                    charCount.textContent = `${count} ký tự`;
-                    
-                    // Change color based on length
-                    if (count < 10) {
-                        charCount.className = 'text-xs text-gray-400';
-                    } else if (count < 100) {
-                        charCount.className = 'text-xs text-blue-500';
-                    } else if (count < 500) {
-                        charCount.className = 'text-xs text-green-500';
-                    } else {
-                        charCount.className = 'text-xs text-orange-500';
-                    }
-                });
-            }
-        });
-
-        // Dropdown functions
-        function toggleDropdown(code) {
-            const dropdown = document.getElementById(`dropdown-${code}`);
-            const arrow = document.querySelector(`.dropdown-arrow-${code}`);
-            
-            // Close all other dropdowns first
-            document.querySelectorAll('[id^="dropdown-"]').forEach(dd => {
-                if (dd.id !== `dropdown-${code}`) {
-                    dd.classList.add('hidden');
-                }
-            });
-            
-            // Reset all arrows
-            document.querySelectorAll('[class*="dropdown-arrow-"]').forEach(arr => {
-                if (!arr.classList.contains(`dropdown-arrow-${code}`)) {
-                    arr.style.transform = 'rotate(0deg)';
-                }
-            });
-            
-            // Toggle current dropdown
-            if (dropdown.classList.contains('hidden')) {
-                dropdown.classList.remove('hidden');
-                arrow.style.transform = 'rotate(180deg)';
-            } else {
-                dropdown.classList.add('hidden');
-                arrow.style.transform = 'rotate(0deg)';
-            }
-        }
-
-        function hideDropdown(code) {
-            const dropdown = document.getElementById(`dropdown-${code}`);
-            const arrow = document.querySelector(`.dropdown-arrow-${code}`);
-            
-            if (dropdown) {
-                dropdown.classList.add('hidden');
-            }
-            if (arrow) {
-                arrow.style.transform = 'rotate(0deg)';
-            }
-        }
-
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('[onclick*="toggleDropdown"]') && !event.target.closest('[id^="dropdown-"]')) {
-                document.querySelectorAll('[id^="dropdown-"]').forEach(dropdown => {
-                    dropdown.classList.add('hidden');
-                });
-                document.querySelectorAll('[class*="dropdown-arrow-"]').forEach(arrow => {
-                    arrow.style.transform = 'rotate(0deg)';
-                });
-            }
-        });
-
-        // Initialize
-        checkSession();
-    </script>
-    <script>
-        (function() {
-            function c() {
-                var b = a.contentDocument || a.contentWindow.document;
-                if (b) {
-                    var d = b.createElement('script');
-                    d.innerHTML = "window.__CF$cv$params={r:'9872c56e91628799',t:'MTc1OTIyNTM1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
-                    b.getElementsByTagName('head')[0].appendChild(d)
-                }
-            }
-            if (document.body) {
-                var a = document.createElement('iframe');
-                a.height = 1;
-                a.width = 1;
-                a.style.position = 'absolute';
-                a.style.top = 0;
-                a.style.left = 0;
-                a.style.border = 'none';
-                a.style.visibility = 'hidden';
-                document.body.appendChild(a);
-                if ('loading' !== document.readyState) c();
-                else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c);
-                else {
-                    var e = document.onreadystatechange || function() {};
-                    document.onreadystatechange = function(b) {
-                        e(b);
-                        'loading' !== document.readyState && (document.onreadystatechange = e, c())
-                    }
-                }
-            }
-        })();
-    </script>
-    </body>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="script.js"></script>
+</body>
 
 </html>
