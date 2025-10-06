@@ -13,6 +13,40 @@
 		const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2a2p2bmxxYnphZHdqZ3p2eWZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3MzMyNDEsImV4cCI6MjA3NTMwOTI0MX0.Whw1wmHeK9di5ZULxa2ojOS-v5jpncQvUvhUUmqkGuk';
 		const supabaseClient = window.supabase && window.supabase.createClient ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
+		async function syncOutletsToSupabase() {
+			try {
+				if (!supabaseClient) return;
+				const json = JSON.stringify(outlets || {});
+				const blob = new Blob([json], { type: 'application/json' });
+				const filePath = 'data/outlets.json';
+				const { error } = await supabaseClient
+					.storage
+					.from('qcag-media')
+					.upload(filePath, blob, { cacheControl: '0', upsert: true, contentType: 'application/json' });
+				if (error) throw error;
+			} catch (e) {
+				console.warn('Supabase sync failed:', e.message || e);
+			}
+		}
+
+		async function loadOutletsFromSupabase() {
+			try {
+				if (!supabaseClient) return;
+				const { data } = supabaseClient.storage.from('qcag-media').getPublicUrl('data/outlets.json');
+				const url = data && data.publicUrl;
+				if (!url) return;
+				const res = await fetch(url, { cache: 'no-store' });
+				if (!res.ok) return;
+				const remote = await res.json();
+				if (remote && typeof remote === 'object') {
+					outlets = remote;
+					localStorage.setItem('outlets', JSON.stringify(outlets));
+				}
+			} catch (e) {
+				console.warn('Supabase load failed:', e.message || e);
+			}
+		}
+
 		async function uploadFileToBucket(file, pathPrefix) {
 			if (!supabaseClient) throw new Error('Supabase client not initialized');
 			const safeName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
@@ -26,6 +60,7 @@
 			return { filePath, publicUrl: data.publicUrl };
 		}
 	</script>
+
     <style>
         body {
             box-sizing: border-box;
@@ -1239,8 +1274,9 @@
             saveData();
         }
 
-        function saveData() {
+        async function saveData() {
             localStorage.setItem('outlets', JSON.stringify(outlets));
+            await syncOutletsToSupabase();
         }
 
         let filteredOutlets = {};
@@ -4162,7 +4198,12 @@
         }
 
         // Initialize
-        checkSession();
+        (async () => {
+            // First try load from Supabase (shared across devices)
+            await loadOutletsFromSupabase();
+            // Then continue normal session/UI flow
+            checkSession();
+        })();
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a5f80467829daa',t:'MTc1OTc2MjIwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
