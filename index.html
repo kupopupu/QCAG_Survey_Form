@@ -19,11 +19,16 @@
 				const json = JSON.stringify(outlets || {});
 				const blob = new Blob([json], { type: 'application/json' });
 				const filePath = 'data/outlets.json';
-				const { error } = await supabaseClient
+				const { data: uploadResult, error } = await supabaseClient
 					.storage
 					.from('qcag-media')
 					.upload(filePath, blob, { cacheControl: '0', upsert: true, contentType: 'application/json' });
-				if (error) throw error;
+				if (error) {
+					console.error('Supabase upload error:', error);
+					alert('❌ Lỗi lưu lên Supabase: ' + (error.message || 'Unknown error') + '\n\nKiểm tra policies của bucket qcag-media (INSERT).');
+					throw error;
+				}
+				console.log('✅ Supabase synced:', uploadResult);
 			} catch (e) {
 				console.warn('Supabase sync failed:', e.message || e);
 			}
